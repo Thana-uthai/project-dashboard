@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทต.หลักหก — Dashboard พื้นที่ปฏิบัติการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lak: #1A5FA8;
+  --lak-light: #E6F0FB;
+  --lak-mid: #85B7EB;
+  --lak-dark: #0D3A68;
+  --warn: #B85000;
+  --warn-light: #FFF3EA;
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --border: #E0DDD6;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9890;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-size: 14px; font-weight: 600; color: var(--text); }
+.nav-logo span { font-size: 11px; font-weight: 400; color: var(--text-3); display: block; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { font-size: 13px; padding: 6px 14px; border-radius: 6px; text-decoration: none; color: var(--text-2); transition: background 0.15s; }
+.nav-link:hover { background: var(--bg); }
+.nav-link.active { background: var(--bg); color: var(--text); font-weight: 500; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+.site-hero { background: var(--lak); border-radius: var(--radius); padding: 2rem 2.5rem; margin-bottom: 2rem; color: white; position: relative; overflow: hidden; }
+.site-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.hero-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #FFD700; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.hero-name { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+.hero-province { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+.hero-stats { display: flex; gap: 2rem; }
+.hero-stat-num { font-size: 28px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+.sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; margin-bottom: 14px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.stat-num { font-size: 24px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: var(--lak); }
+.stat-num.na { color: var(--text-3); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.phase-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+.phase-steps { display: flex; gap: 0; margin-top: 12px; }
+.phase-step { flex: 1; padding: 10px 8px; text-align: center; font-size: 12px; border: 1px solid var(--border); border-right: none; }
+.phase-step:first-child { border-radius: 8px 0 0 8px; }
+.phase-step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+.phase-step.done { background: var(--lak-light); border-color: var(--lak-mid); color: var(--lak); font-weight: 500; }
+.phase-step.current { background: var(--lak-light); border-color: var(--lak); color: var(--lak); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--lak); }
+.phase-step .step-num { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; display: block; margin-bottom: 3px; }
+.phase-note { font-size: 12px; color: var(--text-3); margin-top: 8px; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 2rem; }
+.sh-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.sh-card.key { border-color: var(--lak-mid); }
+.sh-card.gap { border-color: #F0C040; background: #FFFBEF; }
+.sh-role { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); text-transform: uppercase; margin-bottom: 4px; }
+.sh-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.sh-desc { font-size: 13px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+.sh-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+.sh-tag.confirmed { background: var(--lak-light); color: var(--lak); }
+.sh-tag.interest { background: var(--lak-light); color: var(--lak); }
+.sh-tag.pending { background: #FFF8E6; color: #7A5800; }
+.sh-tag.missing { background: var(--warn-light); color: var(--warn); }
+
+/* Constraints */
+.constraint-block { border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.cb-warn { background: var(--warn-light); border: 1px solid #F0B070; }
+.cb-info { background: var(--lak-light); border: 1px solid var(--lak-mid); }
+.constraint-block h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.cb-warn h3 { color: var(--warn); }
+.cb-info h3 { color: var(--lak); }
+.constraint-list { list-style: none; }
+.constraint-list li { font-size: 13px; padding: 3px 0; }
+.cb-warn .constraint-list li { color: var(--warn); }
+.cb-warn .constraint-list li::before { content: '⚠ '; font-size: 11px; }
+.cb-info .constraint-list li { color: #185FA5; }
+.cb-info .constraint-list li::before { content: '✓ '; font-size: 11px; }
+
+.plan-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.pt-head { display: grid; grid-template-columns: 60px 1fr 160px 100px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.pt-row { display: grid; grid-template-columns: 60px 1fr 160px 100px; border-bottom: 1px solid var(--border); }
+.pt-row:last-child { border-bottom: none; }
+.pt-row:hover { background: var(--bg); }
+.pt-head > div, .pt-row > div { padding: 9px 12px; font-size: 13px; }
+.pt-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge.done { background: var(--lak-light); color: var(--lak); }
+.badge.wip { background: #FFF8E6; color: #7A5800; }
+.badge.todo { background: var(--bg); color: var(--text-3); border: 1px solid var(--border); }
+
+/* Diff vs Raiking */
+.diff-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.diff-head { display: grid; grid-template-columns: 28% 1fr 1fr; background: var(--bg); border-bottom: 1px solid var(--border); }
+.diff-row { display: grid; grid-template-columns: 28% 1fr 1fr; border-bottom: 1px solid var(--border); }
+.diff-row:last-child { border-bottom: none; }
+.diff-head > div, .diff-row > div { padding: 9px 12px; font-size: 13px; }
+.diff-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.diff-head .h-rai { color: #1A7A56; }
+.diff-head .h-lak { color: var(--lak); }
+.diff-row .dim { font-weight: 500; font-size: 12px; color: var(--text-2); background: var(--bg); }
+.diff-row .rai-c { border-left: 2px solid #E6F5EE; color: var(--text-2); }
+.diff-row .lak-c { border-left: 2px solid var(--lak-light); }
+.diff-row .lak-c.gap { color: var(--warn); }
+.diff-row .lak-c.ok { color: #185FA5; }
+
+.footer { border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.5rem; display: flex; justify-content: space-between; }
+.footer p { font-size: 12px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน <span>ปรับปรุงที่อยู่อาศัยกลุ่มเปราะบาง — R69-00219</span></div>
+  <div class="nav-links">
+    <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
+    <a href="dashboard_raiking.html" class="nav-link">ทม.ไร่ขิง</a>
+    <a href="dashboard_laksi.html" class="nav-link active">ทต.หลักหก</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="site-hero">
+    <div class="hero-badge"><span class="status-dot"></span> กำลังดำเนินการ — พื้นที่ขยายผล</div>
+    <div class="hero-name">เทศบาลตำบลหลักหก</div>
+    <div class="hero-province">จ.ปทุมธานี — ปี 2569 (พื้นที่ใหม่)</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">2/6</div><div class="hero-stat-label">ระยะที่ผ่านแล้ว</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">12</div><div class="hero-stat-label">นักศึกษา ม.รังสิต</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">ภาคีที่ประสานแล้ว</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">1</div><div class="hero-stat-label">ช่องว่างสำคัญ</div></div>
+    </div>
+  </div>
+
+  <div class="sec-label">ตัวชี้วัดหลัก — ปี 2569</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num">2/6</div><div class="stat-label">ระยะที่ดำเนินการแล้ว</div></div>
+    <div class="stat-card"><div class="stat-num na">—</div><div class="stat-label">รายที่สำรวจ (รอระยะ 3)</div></div>
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">นักศึกษา ม.รังสิต (วิชาชราศึกษา)</div></div>
+    <div class="stat-card"><div class="stat-num na">?</div><div class="stat-label">จำนวนบ้านเป้าหมาย (ยังไม่กำหนด)</div></div>
+  </div>
+
+  <div class="sec-label">ระยะกระบวนการ</div>
+  <div class="phase-card">
+    <p style="font-size:13px;color:var(--lak);">● ผ่านระยะ 1–2 แล้ว — รอกำหนดการลงพื้นที่สำรวจละเอียด (ระยะ 3)</p>
+    <div class="phase-steps">
+      <div class="phase-step done"><span class="step-num">1</span>สำรวจเบื้องต้น</div>
+      <div class="phase-step done"><span class="step-num">2</span>ประสานภาคี</div>
+      <div class="phase-step current"><span class="step-num">3</span>สำรวจละเอียด</div>
+      <div class="phase-step"><span class="step-num">4</span>ออกแบบ</div>
+      <div class="phase-step"><span class="step-num">5</span>ปรับปรุงบ้าน</div>
+      <div class="phase-step"><span class="step-num">6</span>ติดตามผล</div>
+    </div>
+    <div class="phase-note">⏳ กำลังรอ: กำหนดการวิชาชราศึกษา ม.รังสิต / ขอบเขตพื้นที่จาก อสม.</div>
+  </div>
+
+  <div class="sec-label">ภาคีหลักและสถานะ</div>
+  <div class="grid2">
+    <div class="sh-card key">
+      <div class="sh-role">ภาคีสุขภาพ</div>
+      <div class="sh-name">คณะกายภาพบำบัด ม.รังสิต</div>
+      <div class="sh-desc">อ.ษา รับผิดชอบ · นักศึกษา 12 คน (วิชาชราศึกษา) · ลงพื้นที่ได้ 2 วัน</div>
+      <span class="sh-tag confirmed">พูดคุยเบื้องต้นแล้ว</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">อปท.</div>
+      <div class="sh-name">เทศบาลตำบลหลักหก</div>
+      <div class="sh-desc">นายกสนใจและให้การสนับสนุนในหลักการ · เจ้าหน้าที่ยังกังวลกระบวนการของบ</div>
+      <span class="sh-tag interest">นายกสนใจ</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">ภาคีสาธารณสุข</div>
+      <div class="sh-name">รพ.สต. หลักหก</div>
+      <div class="sh-desc">พยาบาลดูแลกลุ่มเปราะบาง · มีข้อมูลเฉพาะกลุ่มติดเตียง · กำลังคนน้อย</div>
+      <span class="sh-tag confirmed">พูดคุยเบื้องต้นแล้ว</span>
+    </div>
+    <div class="sh-card gap">
+      <div class="sh-role" style="color:#B85000;">ช่องว่างสำคัญ</div>
+      <div class="sh-name" style="color:#B85000;">ภาคีสถาปัตย์ — ยังไม่มี</div>
+      <div class="sh-desc" style="color:#7A5800;">ต้องหาคณะสถาปัตยกรรม/การออกแบบ เพื่อออกแบบปรับปรุงบ้าน เปรียบได้กับ มทร.รัตนโกสินทร์ในไร่ขิง</div>
+      <span class="sh-tag missing">⚠ ต้องดำเนินการ</span>
+    </div>
+    <div class="sh-card gap">
+      <div class="sh-role" style="color:#B85000;">ช่องว่างสำคัญ</div>
+      <div class="sh-name" style="color:#B85000;">ผู้ประสานงานกลาง — ยังไม่มี</div>
+      <div class="sh-desc" style="color:#7A5800;">ต้องมีคนทำหน้าที่เชื่อมชุมชน-เทศบาล-วิชาการ (เปรียบเหมือน สท.อ๊อด ในไร่ขิง) คือปัจจัยชี้ขาดที่สุด</div>
+      <span class="sh-tag missing">⚠ ต้องดำเนินการ</span>
+    </div>
+    <div class="sh-card">
+      <div class="sh-role">แกนนำชุมชน / อสม.</div>
+      <div class="sh-name">อสม. ในพื้นที่หลักหก</div>
+      <div class="sh-desc">ยังไม่ได้พบอย่างเป็นทางการ · บทบาทที่วางไว้: ให้ข้อมูลเพิ่มเติม + ช่วยสำรวจ</div>
+      <span class="sh-tag pending">วางแผนประสานงาน</span>
+    </div>
+  </div>
+
+  <div class="sec-label">แผนงานขั้นตอนสำรวจ</div>
+  <div class="plan-table">
+    <div class="pt-head">
+      <div>ขั้น</div>
+      <div>กิจกรรม</div>
+      <div>ผู้รับผิดชอบ</div>
+      <div>สถานะ</div>
+    </div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">1</div><div style="padding:9px 12px;font-size:13px;">ขอข้อมูลกลุ่มเปราะบางจาก รพ.สต. และ ม.รังสิต ทำผังเบื้องต้น</div><div style="padding:9px 12px;font-size:13px;">ทีมโครงการ</div><div style="padding:9px 12px;"><span class="badge done">ดำเนินการแล้ว</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">2</div><div style="padding:9px 12px;font-size:13px;">นำข้อมูลไปคุยกับ อสม. เพิ่มเติมกลุ่มเปราะบางที่ขาด</div><div style="padding:9px 12px;font-size:13px;">ทีม + อสม.</div><div style="padding:9px 12px;"><span class="badge wip">กำลังดำเนินการ</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">3</div><div style="padding:9px 12px;font-size:13px;">อบรมนักศึกษา 1 ครั้ง + ลงสำรวจร่วม 2 วัน (12 คน)</div><div style="padding:9px 12px;font-size:13px;">ทีม + อ.ษา + นักศึกษา</div><div style="padding:9px 12px;"><span class="badge todo">รอกำหนดการ</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">4</div><div style="padding:9px 12px;font-size:13px;">หากสำรวจไม่ครบ: อบรม อสม. เก็บข้อมูลส่วนที่เหลือ</div><div style="padding:9px 12px;font-size:13px;">ทีม + อสม. (สำรอง)</div><div style="padding:9px 12px;"><span class="badge todo">สำรอง</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">5</div><div style="padding:9px 12px;font-size:13px;">สำรวจบ้านละเอียด (ก่อนออกแบบ) — ต้องมีภาคีสถาปัตย์แล้ว</div><div style="padding:9px 12px;font-size:13px;">TBD</div><div style="padding:9px 12px;"><span class="badge todo">ยังไม่ได้วางแผน</span></div></div>
+  </div>
+
+  <div class="sec-label">ประเด็นที่ยังต้องหาคำตอบ</div>
+  <div style="margin-bottom:2rem;">
+    <div class="constraint-block cb-warn" style="margin-bottom:12px;">
+      <h3>⚠ ช่องว่างเร่งด่วน — ต้องดำเนินการก่อน</h3>
+      <ul class="constraint-list">
+        <li>หาภาคีสถาปัตย์/การออกแบบ (ก่อนระยะ 4)</li>
+        <li>หาผู้ประสานงานกลางในพื้นที่ (ก่อนระยะ 3)</li>
+        <li>กำหนดการวิชาชราศึกษา ม.รังสิต — นักศึกษาพร้อมลงพื้นที่ช่วงไหน?</li>
+        <li>กำหนดขอบเขตพื้นที่เป้าหมายกับ อสม. (กี่หลังคาเรือน?)</li>
+      </ul>
+    </div>
+    <div class="constraint-block cb-info">
+      <h3>✓ สิ่งที่เตรียมไว้แล้ว</h3>
+      <ul class="constraint-list">
+        <li>นายกเทศมนตรีเห็นด้วยในหลักการ</li>
+        <li>รพ.สต. มีข้อมูลกลุ่มติดเตียงเป็นฐาน</li>
+        <li>นักศึกษา ม.รังสิต 12 คน พร้อมลงพื้นที่ 2 วัน</li>
+        <li>ทีมโครงการวางแผนกระบวนการสำรวจไว้แล้ว</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-label">เปรียบเทียบกับ ทม.ไร่ขิง — สิ่งที่ต้องปรับ</div>
+  <div class="diff-table">
+    <div class="diff-head">
+      <div>มิติ</div>
+      <div class="h-rai">ทม.ไร่ขิง (บทเรียน)</div>
+      <div class="h-lak">ทต.หลักหก (สถานะปัจจุบัน)</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ภาคีสถาปัตย์</div>
+      <div class="rai-c">มทร.รัตนโกสินทร์ ยืนยันแล้วก่อนระยะ 4</div>
+      <div class="lak-c gap">⚠ ยังไม่มี — ต้องหาก่อนระยะ 4</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">Key Connector</div>
+      <div class="rai-c">สท.อ๊อด — ยืนยันแต่เนิ่นๆ</div>
+      <div class="lak-c gap">⚠ ยังไม่มี — ปัจจัยชี้ขาด</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ฐานข้อมูลเปราะบาง</div>
+      <div class="rai-c">อสม. + รพ.สต. + ชมรม ครอบคลุม</div>
+      <div class="lak-c gap">⚠ รพ.สต. มีเฉพาะ "ติดเตียง" เท่านั้น</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">บทบาทเทศบาล</div>
+      <div class="rai-c">ผู้บริหารผลักดันเต็มที่</div>
+      <div class="lak-c gap">⚠ นายกสนใจ แต่จนท.กังวลขั้นตอน</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ภาคีสุขภาพ</div>
+      <div class="rai-c">ม.มหิดล — มีชื่อเสียงด้าน PT</div>
+      <div class="lak-c ok">✓ ม.รังสิต (อ.ษา) — ต่างกันแต่เทียบเคียงได้</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">กำลังนักศึกษา</div>
+      <div class="rai-c">~15 คน (กายภาพ + สถาปัตย์)</div>
+      <div class="lak-c ok">✓ 12 คน (กายภาพ) — เพียงพอสำหรับระยะ 3</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ขนาด อปท.</div>
+      <div class="rai-c">เทศบาลเมือง — ทรัพยากรมากกว่า</div>
+      <div class="lak-c gap">⚠ เทศบาลตำบล — งบ/คนน้อยกว่า</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>ทต.หลักหก · หลักสูตรขบวนการชุมชน · R69-00219</p>
+    <p>อัปเดตล่าสุด: มิถุนายน 2569</p>
+  </div>
+
+</div>
+</body>
+</html>

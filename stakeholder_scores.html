@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แก้ไขคะแนน Stakeholder</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rai:#1A7A56;--rai-l:#E6F5EE;--rai-m:#5DCAA5;
+  --lak:#1A5FA8;--lak-l:#E6F0FB;--lak-m:#85B7EB;
+  --bpu:#B05000;--bpu-l:#FFF0E6;--bpu-m:#F0A060;
+  --bg:#F7F6F3;--white:#FFFFFF;--border:#E0DDD6;
+  --text:#1A1A1A;--t2:#5A5A5A;--t3:#9A9890;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:14px;font-weight:600;}
+.nav-logo span{font-size:11px;font-weight:400;color:var(--t3);display:block;}
+.back-btn{font-size:13px;padding:6px 16px;border-radius:7px;border:1px solid var(--border);background:var(--white);color:var(--t2);text-decoration:none;cursor:pointer;}
+.back-btn:hover{background:var(--bg);}
+.container{max-width:900px;margin:0 auto;padding:2rem 2rem;}
+.page-title{font-size:22px;font-weight:600;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--t2);margin-bottom:2rem;}
+.site-block{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;}
+.site-head{padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.site-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.site-name{font-size:15px;font-weight:600;}
+.site-prov{font-size:12px;color:var(--t3);}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:var(--bg);}
+th{padding:9px 16px;font-size:11px;font-weight:600;color:var(--t3);text-align:left;border-bottom:1px solid var(--border);letter-spacing:.05em;text-transform:uppercase;}
+th.cen{text-align:center;}
+td{padding:10px 16px;font-size:14px;color:var(--text);border-bottom:0.5px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAF8;}
+.group-icon{font-size:18px;margin-right:6px;}
+input[type=range]{width:100%;accent-color:var(--site-color,#888);}
+.val-display{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;min-width:32px;text-align:center;color:var(--site-color,#888);}
+.pbar-wrap{display:flex;align-items:center;gap:8px;width:160px;}
+.pbar-bg{flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden;}
+.pbar-fill{height:100%;border-radius:3px;background:var(--site-color,#888);transition:width .2s;}
+.save-bar{position:sticky;bottom:0;background:var(--white);border-top:1px solid var(--border);padding:12px 2rem;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 -2rem;}
+.save-btn{font-size:14px;padding:10px 28px;border-radius:8px;border:none;background:var(--text);color:#fff;cursor:pointer;font-family:inherit;font-weight:500;}
+.save-btn:hover{opacity:.88;}
+.save-msg{font-size:13px;color:var(--t3);}
+.save-msg.ok{color:var(--rai);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">แก้ไขคะแนน Stakeholder <span>Power · Interest — R69-00219</span></div>
+  <a href="dashboard_main.html" class="back-btn">← กลับ Dashboard</a>
+</nav>
+
+<div class="container">
+  <div class="page-title">แก้ไขคะแนน Power · Interest</div>
+  <div class="page-sub">ปรับคะแนนแล้วกด "บันทึก" — กราฟใน Dashboard จะอัปเดตทันที</div>
+  <div id="blocks"></div>
+  <div style="height:80px;"></div>
+</div>
+
+<div class="save-bar">
+  <span class="save-msg" id="save-msg">ยังไม่ได้บันทึก</span>
+  <button class="save-btn" onclick="saveAll()">บันทึกคะแนน →</button>
+</div>
+
+<script>
+const COLORS={rai:'#1A7A56',lak:'#1A5FA8',bpu:'#B05000'};
+const ICONS={A:'🏛',B:'📋',C:'🏥',D:'🎓',E:'👥'};
+const GROUP_LABELS={A:'ผู้บริหาร อปท.',B:'เจ้าหน้าที่ อปท.',C:'สาธารณสุข / รพ.สต.',D:'นักศึกษา / สถาปนิก',E:'อสม. / แกนนำชุมชน'};
+const SITES=[
+  {key:'rai',name:'ทม.ไร่ขิง',prov:'จ.นครปฐม'},
+  {key:'lak',name:'ทต.หลักหก',prov:'จ.ปทุมธานี'},
+  {key:'bpu',name:'ทต.บางปู',prov:'จ.สมุทรปราการ'},
+];
+
+let NODES=[
+  {id:'r-A', site:'rai',group:'A',label:'นายก ไร่ขิง',            power:5,  interest:2.5},
+  {id:'r-A2',site:'rai',group:'A',label:'รองนายก (สท.อ๊อด)',      power:4,  interest:4.5},
+  {id:'r-B', site:'rai',group:'B',label:'จนท.สวัสดิการ ไร่ขิง',  power:3,  interest:2.5},
+  {id:'r-B2',site:'rai',group:'B',label:'จนท.สาธารณสุข ไร่ขิง',  power:3,  interest:2.5},
+  {id:'r-C', site:'rai',group:'C',label:'รพ.สต. ไร่ขิง',           power:2.5,interest:4},
+  {id:'r-D', site:'rai',group:'D',label:'ม.มหิดล + มทร.',          power:2,  interest:5},
+  {id:'r-E', site:'rai',group:'E',label:'อสม. ไร่ขิง',             power:2.5,interest:5},
+  {id:'l-A', site:'lak',group:'A',label:'นายก หลักหก',             power:5,  interest:3},
+  {id:'l-B', site:'lak',group:'B',label:'จนท. หลักหก',            power:3,  interest:2},
+  {id:'l-C', site:'lak',group:'C',label:'รพ.สต. หลักหก',          power:2.5,interest:4},
+  {id:'l-D', site:'lak',group:'D',label:'ม.รังสิต (อ.ษา)',        power:2,  interest:5},
+  {id:'l-E', site:'lak',group:'E',label:'อสม. หลักหก',            power:2.5,interest:3},
+  {id:'b-A', site:'bpu',group:'A',label:'รองนายก บางปู',          power:4,  interest:3.5},
+  {id:'b-B', site:'bpu',group:'B',label:'จนท.สวัสดิการ บางปู',   power:3,  interest:3.5},
+  {id:'b-C', site:'bpu',group:'C',label:'สาธารณสุข บางปู',       power:2.5,interest:3},
+  {id:'b-D', site:'bpu',group:'D',label:'ม.ลาดกระบัง',           power:2,  interest:3},
+  {id:'b-E', site:'bpu',group:'E',label:'ชุมชน บางปู',           power:2.5,interest:3},
+];
+
+function tryLoadSaved(){
+  try{const s=localStorage.getItem('pi-scores');if(s){const d=JSON.parse(s);NODES=d;}}catch(e){}
+}
+
+function buildUI(){
+  const container=document.getElementById('blocks');
+  container.innerHTML='';
+  SITES.forEach(site=>{
+    const nodes=NODES.filter(n=>n.site===site.key);
+    const c=COLORS[site.key];
+    const block=document.createElement('div');
+    block.className='site-block';
+    block.style.borderTop=`3px solid ${c}`;
+    block.innerHTML=`
+      <div class="site-head">
+        <div class="site-dot" style="background:${c};"></div>
+        <div class="site-name">${site.name}</div>
+        <div class="site-prov" style="margin-left:4px;">${site.prov}</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>กลุ่ม · ชื่อ</th>
+          <th class="cen" style="width:180px;">Power (1–5) <span style="font-weight:400;font-size:10px;">ระดับอำนาจ</span></th>
+          <th class="cen" style="width:180px;">Interest (1–5) <span style="font-weight:400;font-size:10px;">ความสนใจ</span></th>
+        </tr></thead>
+        <tbody>${nodes.map(n=>`
+          <tr>
+            <td><span class="group-icon">${ICONS[n.group]}</span>${n.label}<div style="font-size:11px;color:var(--t3);margin-top:1px;">${GROUP_LABELS[n.group]}</div></td>
+            <td>
+              <div class="pbar-wrap" style="--site-color:${c};">
+                <input type="range" min="1" max="5" step="0.5" value="${n.power}" id="pw-${n.id}" oninput="updateVal('${n.id}','power',this.value,'${c}')">
+                <span class="val-display" id="pwv-${n.id}" style="color:${c};">${n.power}</span>
+              </div>
+            </td>
+            <td>
+              <div class="pbar-wrap" style="--site-color:${c};">
+                <input type="range" min="1" max="5" step="0.5" value="${n.interest}" id="in-${n.id}" oninput="updateVal('${n.id}','interest',this.value,'${c}')">
+                <span class="val-display" id="inv-${n.id}" style="color:${c};">${n.interest}</span>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    container.appendChild(block);
+  });
+}
+
+function updateVal(id,field,val,c){
+  const n=NODES.find(n=>n.id===id);
+  if(n) n[field]=parseFloat(val);
+  const el=document.getElementById((field==='power'?'pwv-':'inv-')+id);
+  if(el){el.textContent=val;}
+  document.getElementById('save-msg').textContent='มีการเปลี่ยนแปลง — กด "บันทึก"';
+  document.getElementById('save-msg').className='save-msg';
+}
+
+function saveAll(){
+  try{
+    localStorage.setItem('pi-scores',JSON.stringify(NODES));
+    window.localStorage.setItem('pi-scores',JSON.stringify(NODES));
+    const msg=document.getElementById('save-msg');
+    msg.textContent='✓ บันทึกแล้ว — กลับ Dashboard เพื่อดูกราฟที่อัปเดต';
+    msg.className='save-msg ok';
+  } catch(e){
+    document.getElementById('save-msg').textContent='เกิดข้อผิดพลาด กรุณาลองใหม่';
+  }
+}
+
+tryLoadSaved();
+buildUI();
+</script>
+</body>
+</html>

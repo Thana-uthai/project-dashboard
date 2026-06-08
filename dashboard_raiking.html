@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทม.ไร่ขิง — Dashboard พื้นที่ปฏิบัติการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rai: #1A7A56;
+  --rai-light: #E6F5EE;
+  --rai-mid: #5DCAA5;
+  --rai-dark: #0D4A34;
+  --rai69: #7C5BBF;
+  --rai69-light: #F0ECFF;
+  --rai69-mid: #B39DDB;
+  --rai69-dark: #4A3570;
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --border: #E0DDD6;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9890;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-size: 14px; font-weight: 600; color: var(--text); }
+.nav-logo span { font-size: 11px; font-weight: 400; color: var(--text-3); display: block; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { font-size: 13px; padding: 6px 14px; border-radius: 6px; text-decoration: none; color: var(--text-2); transition: background 0.15s; }
+.nav-link:hover { background: var(--bg); }
+.nav-link.active { background: var(--bg); color: var(--text); font-weight: 500; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+/* SITE HERO */
+.site-hero { background: var(--rai); border-radius: var(--radius); padding: 2rem 2.5rem; margin-bottom: 2rem; color: white; position: relative; overflow: hidden; }
+.site-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.site-hero::after { content: ''; position: absolute; right: 60px; bottom: -60px; width: 280px; height: 280px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+.hero-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.hero-name { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+.hero-province { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+.hero-stats { display: flex; gap: 2rem; }
+.hero-stat { }
+.hero-stat-num { font-size: 28px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+/* YEAR TABS */
+.year-tabs { display: flex; gap: 4px; margin-bottom: 2rem; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 4px; }
+.year-tab { flex: 1; padding: 8px; text-align: center; font-size: 14px; font-weight: 500; border-radius: 8px; cursor: pointer; border: none; background: transparent; color: var(--text-2); transition: all 0.15s; }
+.year-tab.active-68 { background: var(--rai-light); color: var(--rai); }
+.year-tab.active-69 { background: var(--rai69-light); color: var(--rai69); }
+
+/* CONTENT PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION */
+.sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; margin-bottom: 14px; }
+
+/* STAT GRID */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.stat-num { font-size: 24px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.stat-num.rai { color: var(--rai); }
+.stat-num.rai69 { color: var(--rai69); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+/* PHASE */
+.phase-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+.phase-steps { display: flex; gap: 0; margin-top: 12px; }
+.phase-step { flex: 1; padding: 10px 8px; text-align: center; font-size: 12px; border: 1px solid var(--border); border-right: none; }
+.phase-step:first-child { border-radius: 8px 0 0 8px; }
+.phase-step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+.phase-step.done { background: var(--rai-light); border-color: var(--rai-mid); color: var(--rai); font-weight: 500; }
+.phase-step.done69 { background: var(--rai69-light); border-color: var(--rai69-mid); color: var(--rai69); font-weight: 500; }
+.phase-step.current { background: var(--rai69-light); border-color: var(--rai69); color: var(--rai69); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--rai69); }
+.phase-step .step-num { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; display: block; margin-bottom: 3px; }
+
+/* STAKEHOLDER */
+.stakeholder-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 2rem; }
+.sh-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.sh-card.key { border-color: var(--rai-mid); }
+.sh-card.key69 { border-color: var(--rai69-mid); }
+.sh-role { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); text-transform: uppercase; margin-bottom: 4px; }
+.sh-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.sh-desc { font-size: 13px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+.sh-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+.sh-tag.confirmed { background: var(--rai-light); color: var(--rai); }
+.sh-tag.new { background: var(--rai69-light); color: var(--rai69); }
+.sh-tag.pending { background: #FFF8E6; color: #7A5800; }
+
+/* PROCESS TABLE */
+.process-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.pt-head { display: grid; grid-template-columns: 60px 140px 1fr 120px; gap: 0; background: var(--bg); border-bottom: 1px solid var(--border); }
+.pt-row { display: grid; grid-template-columns: 60px 140px 1fr 120px; gap: 0; border-bottom: 1px solid var(--border); }
+.pt-row:last-child { border-bottom: none; }
+.pt-row:hover { background: var(--bg); }
+.pt-head > div, .pt-row > div { padding: 9px 12px; font-size: 13px; }
+.pt-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.pt-n { color: var(--text-3); font-family: 'IBM Plex Mono', monospace; }
+.pt-phase { font-weight: 500; }
+.pt-phase.p1 { color: var(--rai); }
+.pt-phase.p2 { color: #1A5FA8; }
+.pt-phase.p3 { color: #7A5800; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge.out { background: var(--rai-light); color: var(--rai); }
+.badge.inc { background: #E6F0FB; color: #185FA5; }
+.badge.plan { background: var(--rai69-light); color: var(--rai69); }
+.badge.gap { background: #FFF8E6; color: #7A5800; }
+
+/* OUTCOME GRID */
+.outcome-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 2rem; }
+.outcome-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.outcome-type { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); text-transform: uppercase; margin-bottom: 8px; }
+.outcome-list { list-style: none; }
+.outcome-list li { font-size: 13px; color: var(--text-2); padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+.outcome-list li:last-child { border-bottom: none; }
+.outcome-list li::before { content: '·'; color: var(--rai); margin-right: 6px; font-weight: 600; }
+.outcome-list li.rai69::before { color: var(--rai69); }
+
+/* CONSTRAINT */
+.constraint-block { background: #FFFBEF; border: 1px solid #F0C040; border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 2rem; }
+.constraint-block h3 { font-size: 13px; font-weight: 600; color: #6B4E00; margin-bottom: 8px; }
+.constraint-list { list-style: none; }
+.constraint-list li { font-size: 13px; color: #7A5800; padding: 3px 0; }
+.constraint-list li::before { content: '⚠'; margin-right: 6px; font-size: 11px; }
+
+/* FOOTER */
+.footer { border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.5rem; display: flex; justify-content: space-between; }
+.footer p { font-size: 12px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน <span>ปรับปรุงที่อยู่อาศัยกลุ่มเปราะบาง — R69-00219</span></div>
+  <div class="nav-links">
+    <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
+    <a href="dashboard_raiking.html" class="nav-link active">ทม.ไร่ขิง</a>
+    <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="site-hero">
+    <div class="hero-badge">พื้นที่นำร่อง · เทศบาลเมือง</div>
+    <div class="hero-name">เทศบาลเมืองไร่ขิง</div>
+    <div class="hero-province">จ.นครปฐม — ดำเนินงานปี 2567–2569</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">ปีที่ดำเนินงาน</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">21</div><div class="hero-stat-label">ครั้งกระบวนการ (ปี 68)</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-label">หลังที่ออกแบบ</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">4</div><div class="hero-stat-label">ภาคีหลัก</div></div>
+    </div>
+  </div>
+
+  <div class="year-tabs">
+    <button class="year-tab active-68" onclick="switchYear('68')">ปี 2568 (เสร็จสิ้น)</button>
+    <button class="year-tab" onclick="switchYear('69')" id="tab69">ปี 2569 (กำลังดำเนินการ) 🔴</button>
+  </div>
+
+  <!-- PANEL ปี 68 -->
+  <div class="panel active" id="panel-68">
+
+    <div class="sec-label">ตัวชี้วัดหลัก — ปี 2568</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num rai">7</div><div class="stat-label">รายที่ผ่านการสำรวจ</div></div>
+      <div class="stat-card"><div class="stat-num rai">5</div><div class="stat-label">หลังที่ได้รับการออกแบบ</div></div>
+      <div class="stat-card"><div class="stat-num rai">6</div><div class="stat-label">แบบที่ผลิต (2 ทางเลือก/หลัง)</div></div>
+      <div class="stat-card"><div class="stat-num rai">21</div><div class="stat-label">ครั้งกระบวนการทั้งหมด</div></div>
+    </div>
+
+    <div class="sec-label">ระยะกระบวนการ</div>
+    <div class="phase-card">
+      <p style="font-size:13px;color:var(--text-2);">ครบทุก 6 ระยะ — เสร็จสิ้นปีงบประมาณ 2568</p>
+      <div class="phase-steps">
+        <div class="phase-step done"><span class="step-num">1</span>สำรวจเบื้องต้น</div>
+        <div class="phase-step done"><span class="step-num">2</span>ประสานภาคี</div>
+        <div class="phase-step done"><span class="step-num">3</span>สำรวจละเอียด</div>
+        <div class="phase-step done"><span class="step-num">4</span>ออกแบบ</div>
+        <div class="phase-step done"><span class="step-num">5</span>ปรับปรุงบ้าน</div>
+        <div class="phase-step done"><span class="step-num">6</span>ติดตามผล</div>
+      </div>
+    </div>
+
+    <div class="sec-label">ภาคีหลักปี 68</div>
+    <div class="stakeholder-grid">
+      <div class="sh-card key">
+        <div class="sh-role">ภาคีสุขภาพ</div>
+        <div class="sh-name">คณะกายภาพบำบัด ม.มหิดล</div>
+        <div class="sh-desc">ประเมิน ICF · ออกแผนการดูแล · นักศึกษาลงสำรวจ</div>
+        <span class="sh-tag confirmed">ยืนยันแล้ว</span>
+      </div>
+      <div class="sh-card key">
+        <div class="sh-role">ภาคีสถาปัตยกรรม</div>
+        <div class="sh-name">คณะสถาปัตย์ฯ มทร.รัตนโกสินทร์</div>
+        <div class="sh-desc">ออกแบบปรับปรุงบ้าน · นักศึกษาใช้เป็นโจทย์รายวิชา</div>
+        <span class="sh-tag confirmed">ยืนยันแล้ว</span>
+      </div>
+      <div class="sh-card key">
+        <div class="sh-role">ผู้ประสานงานกลาง</div>
+        <div class="sh-name">สท.อ๊อด</div>
+        <div class="sh-desc">เชื่อมชุมชน-เทศบาล-วิชาการ · ประสานกิจกรรมทุกครั้ง</div>
+        <span class="sh-tag confirmed">บทบาทสำคัญที่สุด</span>
+      </div>
+      <div class="sh-card key">
+        <div class="sh-role">ภาคีสาธารณสุข</div>
+        <div class="sh-name">รพ.สต. บ้านท่าพูด</div>
+        <div class="sh-desc">วิทยากรหลักด้านกายภาพ · ข้อมูลกลุ่มเปราะบาง</div>
+        <span class="sh-tag confirmed">ยืนยันแล้ว</span>
+      </div>
+    </div>
+
+    <div class="sec-label">21 ครั้งกระบวนการ — สรุปตามระยะ</div>
+    <div class="process-table">
+      <div class="pt-head">
+        <div>ครั้ง</div>
+        <div>ระยะ</div>
+        <div>กิจกรรมหลัก</div>
+        <div>ผล</div>
+      </div>
+      <div class="pt-row"><div class="pt-n">1–3</div><div class="pt-phase p1">สำรวจเบื้องต้น</div><div>ลงพื้นที่รับรู้ชุมชน · สำรวจข้อมูล 7 ราย · ประสานชมรมผู้สูงอายุ</div><div><span class="badge out">Output</span></div></div>
+      <div class="pt-row"><div class="pt-n">4–6</div><div class="pt-phase p1">ประสานภาคี</div><div>นำเสนอโครงการต่อ ม.มหิดล · นำเสนอต่อ มทร. · สรุปแผนความร่วมมือ</div><div><span class="badge out">Output</span></div></div>
+      <div class="pt-row"><div class="pt-n">7–9</div><div class="pt-phase p2">สำรวจละเอียด</div><div>ลงบ้านร่วมกับนักศึกษากายภาพ · ประเมิน ICF ทุกราย · ถ่ายรูปพื้นที่</div><div><span class="badge inc">Outcome</span></div></div>
+      <div class="pt-row"><div class="pt-n">10–15</div><div class="pt-phase p2">ออกแบบ</div><div>Workshop นักศึกษาสถาปัตย์ · นำเสนอแบบต่อเจ้าของบ้าน · ปรับแบบตามความต้องการ</div><div><span class="badge inc">Outcome</span></div></div>
+      <div class="pt-row"><div class="pt-n">16–18</div><div class="pt-phase p3">ปรับปรุงบ้าน</div><div>ดำเนินงานก่อสร้าง 3 หลัง · ติดตั้งราวจับ · ปรับพื้นที่ใช้งาน</div><div><span class="badge inc">Outcome</span></div></div>
+      <div class="pt-row"><div class="pt-n">19–21</div><div class="pt-phase p3">ติดตามผล</div><div>เยี่ยมบ้านหลังปรับปรุง · ประเมินการใช้งาน · ถอดบทเรียน</div><div><span class="badge inc">Outcome</span></div></div>
+    </div>
+
+    <div class="sec-label">ผลลัพธ์</div>
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-type">Outputs — ผลผลิต</div>
+        <ul class="outcome-list">
+          <li>แบบปรับปรุงบ้าน 6 แบบ (3 หลัง × 2 ทางเลือก)</li>
+          <li>แผนดูแลสุขภาพรายบุคคล 5 ราย</li>
+          <li>ข้อมูล ICF ผู้สูงอายุ 7 ราย</li>
+          <li>กลไก ม.มหิดล + มทร. ร่วมกับเทศบาล</li>
+          <li>คู่มือท่ากายภาพบำบัดสำหรับผู้ดูแล</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-type">Outcomes — ผลลัพธ์</div>
+        <ul class="outcome-list">
+          <li>ผู้สูงอายุ 1 ราย ฟื้นฟูได้ (นอนติดเตียง → เดินได้)</li>
+          <li>นักศึกษาได้โจทย์จริงเป็นฐานการเรียนรู้</li>
+          <li>อาจารย์เห็นโอกาสบรรจุในหลักสูตรระยะยาว</li>
+          <li>เทศบาลมีแนวทางการทำงานปีถัดไป</li>
+          <li>สท.อ๊อดยืนยันเป็นผู้ประสานงานต่อเนื่อง</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="constraint-block">
+      <h3>⚠ ข้อจำกัดและบทเรียนปี 68</h3>
+      <ul class="constraint-list">
+        <li>ข้อมูลกลุ่มเปราะบางไม่ครบและไม่เป็นปัจจุบัน ต้องสำรวจเพิ่มเสมอ</li>
+        <li>ตารางนักศึกษาไม่ตรงกับชุมชน ทำ interdisciplinary ในเวลาเดียวกันได้ยาก</li>
+        <li>บุคลากรเทศบาลมีภาระงานสูง ต้องอาศัยทีมโครงการเป็นผู้ประสาน</li>
+        <li>งบปรับปรุงบ้านยังไม่ได้บรรจุในแผน อปท. อย่างเป็นทางการ</li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- END PANEL 68 -->
+
+  <!-- PANEL ปี 69 -->
+  <div class="panel" id="panel-69" style="display:none;">
+
+    <div class="sec-label" id="y69">ตัวชี้วัดหลัก — ปี 2569 (กำลังดำเนินการ)</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num rai69">1/6</div><div class="stat-label">ระยะที่ดำเนินการอยู่</div></div>
+      <div class="stat-card"><div class="stat-num rai69">—</div><div class="stat-label">รายที่สำรวจ (ยังไม่ได้เริ่ม)</div></div>
+      <div class="stat-card"><div class="stat-num rai69">4</div><div class="stat-label">ภาคีต่อเนื่อง</div></div>
+      <div class="stat-card"><div class="stat-num rai69">เม.ย.</div><div class="stat-label">เดือนที่เริ่ม</div></div>
+    </div>
+
+    <div class="sec-label">ระยะกระบวนการ — ปี 69</div>
+    <div class="phase-card">
+      <p style="font-size:13px;color:var(--rai69);">● กำลังดำเนินการ: ระยะที่ 1 — สำรวจเบื้องต้น</p>
+      <div class="phase-steps">
+        <div class="phase-step current"><span class="step-num">1</span>สำรวจเบื้องต้น</div>
+        <div class="phase-step"><span class="step-num">2</span>ประสานภาคี</div>
+        <div class="phase-step"><span class="step-num">3</span>สำรวจละเอียด</div>
+        <div class="phase-step"><span class="step-num">4</span>ออกแบบ</div>
+        <div class="phase-step"><span class="step-num">5</span>ปรับปรุงบ้าน</div>
+        <div class="phase-step"><span class="step-num">6</span>ติดตามผล</div>
+      </div>
+    </div>
+
+    <div class="sec-label">ภาคีปี 69 — ต่อเนื่องจากปี 68</div>
+    <div class="stakeholder-grid">
+      <div class="sh-card key69">
+        <div class="sh-role">ภาคีสุขภาพ (ต่อเนื่อง)</div>
+        <div class="sh-name">คณะกายภาพบำบัด ม.มหิดล</div>
+        <div class="sh-desc">ต่อยอดจากปี 68 · นักศึกษาชุดใหม่ · กรณีใหม่</div>
+        <span class="sh-tag confirmed">ต่อเนื่อง</span>
+      </div>
+      <div class="sh-card key69">
+        <div class="sh-role">ภาคีสถาปัตย์ (ต่อเนื่อง)</div>
+        <div class="sh-name">คณะสถาปัตย์ฯ มทร.รัตนโกสินทร์</div>
+        <div class="sh-desc">พัฒนาจากบทเรียนปี 68 · อาจารย์เดิม</div>
+        <span class="sh-tag confirmed">ต่อเนื่อง</span>
+      </div>
+      <div class="sh-card key69">
+        <div class="sh-role">ผู้ประสานงานกลาง</div>
+        <div class="sh-name">สท.อ๊อด</div>
+        <div class="sh-desc">ยืนยันต่อเนื่อง · มีบทบาทชัดขึ้นในปีนี้</div>
+        <span class="sh-tag confirmed">ต่อเนื่อง</span>
+      </div>
+      <div class="sh-card key69">
+        <div class="sh-role">ภาคีสาธารณสุข</div>
+        <div class="sh-name">รพ.สต. บ้านท่าพูด</div>
+        <div class="sh-desc">อัปเดตข้อมูลกลุ่มเปราะบาง · ประสาน อสม.</div>
+        <span class="sh-tag confirmed">ต่อเนื่อง</span>
+      </div>
+    </div>
+
+    <div class="sec-label">สิ่งที่ต่างจากปี 68 — บทเรียนที่นำมาปรับ</div>
+    <div class="outcome-grid">
+      <div class="outcome-card" style="border-left: 3px solid var(--rai69);">
+        <div class="outcome-type" style="color:var(--rai69);">สิ่งที่ปรับปรุงจากปี 68</div>
+        <ul class="outcome-list">
+          <li class="rai69">อัปเดตฐานข้อมูลกลุ่มเปราะบางก่อนเริ่ม</li>
+          <li class="rai69">กำหนดตารางร่วมกับนักศึกษาล่วงหน้ามากขึ้น</li>
+          <li class="rai69">เพิ่มแบบ Baseline ก่อน-หลัง ให้ชัดเจน</li>
+          <li class="rai69">วางแผนขอบรรจุงบใน อปท. อย่างเป็นทางการ</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-type">เป้าหมายปี 69</div>
+        <ul class="outcome-list">
+          <li>กรณีใหม่อย่างน้อย 5 ราย</li>
+          <li>เทศบาลเริ่มจัดสรรงบเองบางส่วน</li>
+          <li>นักศึกษาชุดใหม่สืบทอดกระบวนการ</li>
+          <li>จัดทำ Model Document เพื่อขยายผล</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="constraint-block">
+      <h3>⚠ ช่องว่างที่ยังต้องแก้ไขในปี 69</h3>
+      <ul class="constraint-list">
+        <li>ฐานข้อมูลกลุ่มเปราะบางยังต้องอัปเดตใหม่ทุกปี (ไม่มีระบบถาวร)</li>
+        <li>งบปรับปรุงบ้านยังพึ่งโครงการ ยังไม่ได้ถ่ายโอนสู่ อปท.</li>
+        <li>บทบาทของทีมโครงการยังมากเกินไป (ต้องค่อยๆ ถ่ายโอนให้ท้องถิ่น)</li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- END PANEL 69 -->
+
+  <div class="footer">
+    <p>ทม.ไร่ขิง · หลักสูตรขบวนการชุมชน · R69-00219</p>
+    <p>อัปเดตล่าสุด: มิถุนายน 2569</p>
+  </div>
+
+</div>
+
+<script>
+function switchYear(y) {
+  document.getElementById('panel-68').style.display = y === '68' ? 'block' : 'none';
+  document.getElementById('panel-69').style.display = y === '69' ? 'block' : 'none';
+  document.querySelector('.year-tab:nth-child(1)').className = 'year-tab' + (y === '68' ? ' active-68' : '');
+  document.querySelector('.year-tab:nth-child(2)').className = 'year-tab' + (y === '69' ? ' active-69' : '');
+}
+if (window.location.hash === '#y69') switchYear('69');
+</script>
+</body>
+</html>
