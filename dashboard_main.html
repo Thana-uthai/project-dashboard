@@ -130,6 +130,101 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
 /* FOOTER */
 .footer{text-align:center;font-size:13px;color:var(--t3);padding:2rem 0 3rem;}
 </style>
+<script>
+// ═══ Google Sheets Data Loader ═══
+const SHEET_ID = '1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8';
+const PHASE_NAMES = ['ประสานภาคี','สำรวจเบื้องต้น','คืนข้อมูล','สำรวจละเอียด','ออกแบบ','ปรับปรุงบ้าน','ติดตามผล'];
+const SITE_CSS = {rai:{cur:'cur-r',done:'done-r',color:'var(--rai)',light:'var(--rai-l)',mid:'var(--rai-m)'},lak:{cur:'cur-l',done:'done-l',color:'var(--lak)',light:'var(--lak-l)',mid:'var(--lak-m)'},bpu:{cur:'cur-b',done:'done-b',color:'var(--bpu)',light:'var(--bpu-l)',mid:'var(--bpu-m)'}};
+
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.replace(/.*google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, ''));
+  const cols = json.table.cols.map(c => c.label);
+  return json.table.rows.map(r => {
+    const obj = {};
+    r.c.forEach((cell, i) => { obj[cols[i]] = cell ? (cell.v !== null ? cell.v : '') : ''; });
+    return obj;
+  });
+}
+
+function tagClass(tag) {
+  if (tag.startsWith('✓')) return 'ptag-ok';
+  if (tag.startsWith('⚠')) return 'ptag-gap';
+  return 'ptag-wait';
+}
+
+function renderPhase(row) {
+  const site = row.site;
+  const css = SITE_CSS[site] || SITE_CSS.rai;
+  const cur = parseInt(row.phase_current) || 1;
+  const steps = PHASE_NAMES.map((name, i) => {
+    const cls = (i + 1 === cur) ? css.cur : (i + 1 < cur ? css.done : '');
+    return `<div class="pstep ${cls}">${name}</div>`;
+  }).join('');
+  const tags = [row.tag1, row.tag2, row.tag3].filter(Boolean).map(t => {
+    const cls = tagClass(t);
+    if (cls === 'ptag-ok') return `<span class="ptag" style="background:${css.light};color:${css.color};border:1px solid ${css.mid};">${t}</span>`;
+    return `<span class="ptag ${cls}">${t}</span>`;
+  }).join('');
+  return `<div class="phase-steps">${steps}</div><div class="phase-tags">${tags}</div>`;
+}
+
+async function loadProgress() {
+  try {
+    const rows = await fetchSheet('progress');
+    const wrap = document.getElementById('phase-wrap-dynamic');
+    if (!wrap) return;
+    wrap.innerHTML = rows.map(row => `
+      <div class="phase-row">
+        <div class="phase-lbl">${row.site_name}<small>ปี ${row.year} — ${row.province}</small></div>
+        <div class="phase-col">${renderPhase(row)}</div>
+      </div>`).join('');
+    // อัปเดต section label
+    const allPhase = rows.every(r => parseInt(r.phase_current) === parseInt(rows[0].phase_current));
+    const label = document.getElementById('phase-section-label');
+    if (label && allPhase) label.textContent = `ความคืบหน้ากระบวนการ 7 ระยะ — ทุกพื้นที่อยู่ระยะที่ ${rows[0].phase_current}`;
+    // อัปเดต last_updated
+    const updated = [...new Set(rows.map(r => r.last_updated).filter(Boolean))].join(', ');
+    const footer = document.getElementById('last-updated-label');
+    if (footer) footer.textContent = `อัปเดตล่าสุด: ${updated}`;
+  } catch(e) { console.warn('ดึงข้อมูล progress ไม่ได้:', e); }
+}
+
+async function loadComparison() {
+  try {
+    const rows = await fetchSheet('comparison');
+    const body = document.getElementById('cmp-body-dynamic');
+    if (!body) return;
+    body.innerHTML = rows.map(row => `
+      <div class="cmp-row">
+        <div class="dim">${row.dimension}</div>
+        <div class="rc">${row.rai_val}</div>
+        <div class="lc">${row.lak_val}</div>
+        <div class="bc">${row.bpu_val}</div>
+      </div>`).join('');
+  } catch(e) { console.warn('ดึงข้อมูล comparison ไม่ได้:', e); }
+}
+
+async function loadScores() {
+  try {
+    const rows = await fetchSheet('scores');
+    if (!rows.length) return;
+    PI_NODES = rows.map(r => ({
+      id: r.id, site: r.site, group: r.group, label: r.label,
+      power: parseFloat(r.power), interest: parseFloat(r.interest)
+    }));
+    piRender();
+  } catch(e) { console.warn('ดึงข้อมูล scores ไม่ได้:', e); }
+}
+
+window.addEventListener('load', () => {
+  loadProgress();
+  loadComparison();
+  setTimeout(loadScores, 300); // รอให้ piRender พร้อมก่อน
+});
+</script>
 </head>
 <body>
 
@@ -156,73 +251,10 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
     </div>
 
     <div style="margin-top:3rem;">
-    <div class="sec-label">ความคืบหน้ากระบวนการ 7 ระยะ — ทุกพื้นที่อยู่ระยะที่ 1</div>
-    <div class="phase-wrap">
-
-      <!-- ไร่ขิง -->
-      <div class="phase-row">
-        <div class="phase-lbl">ทม.ไร่ขิง<small>ปี 69 — ขยายผล</small></div>
-        <div class="phase-col">
-          <div class="phase-steps">
-            <div class="pstep cur-r">ประสานภาคี</div>
-            <div class="pstep">สำรวจเบื้องต้น</div>
-            <div class="pstep">คืนข้อมูล</div>
-            <div class="pstep">สำรวจละเอียด</div>
-            <div class="pstep">ออกแบบ</div>
-            <div class="pstep">ปรับปรุงบ้าน</div>
-            <div class="pstep">ติดตามผล</div>
-          </div>
-          <div class="phase-tags">
-            <span class="ptag" style="background:var(--rai-l);color:var(--rai);border:1px solid var(--rai-m);">✓ ทีมวิชาการต่อเนื่อง</span>
-            <span class="ptag ptag-wait">⏳ รอนัดนายก</span>
-            <span class="ptag ptag-wait">⏳ พัฒนาแนวทางปีถัดไป</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- หลักหก -->
-      <div class="phase-row">
-        <div class="phase-lbl">ทต.หลักหก<small>ปี 69 — พื้นที่ใหม่</small></div>
-        <div class="phase-col">
-          <div class="phase-steps">
-            <div class="pstep cur-l">ประสานภาคี</div>
-            <div class="pstep">สำรวจเบื้องต้น</div>
-            <div class="pstep">คืนข้อมูล</div>
-            <div class="pstep">สำรวจละเอียด</div>
-            <div class="pstep">ออกแบบ</div>
-            <div class="pstep">ปรับปรุงบ้าน</div>
-            <div class="pstep">ติดตามผล</div>
-          </div>
-          <div class="phase-tags">
-            <span class="ptag" style="background:var(--lak-l);color:var(--lak);border:1px solid var(--lak-m);">✓ รพ.สต. แล้ว</span>
-            <span class="ptag" style="background:var(--lak-l);color:var(--lak);border:1px solid var(--lak-m);">✓ เทศบาลแล้ว</span>
-            <span class="ptag ptag-wait">⏳ รอ อสม.</span>
-            <span class="ptag ptag-gap">⚠ ภาคีสถาปัตย์ยังไม่มี</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- บางปู -->
-      <div class="phase-row">
-        <div class="phase-lbl">ทต.บางปู<small>ปี 69 — พื้นที่ใหม่</small></div>
-        <div class="phase-col">
-          <div class="phase-steps">
-            <div class="pstep cur-b">ประสานภาคี</div>
-            <div class="pstep">สำรวจเบื้องต้น</div>
-            <div class="pstep">คืนข้อมูล</div>
-            <div class="pstep">สำรวจละเอียด</div>
-            <div class="pstep">ออกแบบ</div>
-            <div class="pstep">ปรับปรุงบ้าน</div>
-            <div class="pstep">ติดตามผล</div>
-          </div>
-          <div class="phase-tags">
-            <span class="ptag" style="background:var(--bpu-l);color:var(--bpu);border:1px solid var(--bpu-m);">✓ เทศบาลแล้ว</span>
-            <span class="ptag ptag-wait">⏳ รอทีมสาธารณสุข</span>
-            <span class="ptag ptag-wait">⏳ สถาปนิก — อาศรมประสาน</span>
-          </div>
-        </div>
-      </div>
-
+    <div class="sec-label" id="phase-section-label">ความคืบหน้ากระบวนการ 7 ระยะ — กำลังโหลด...</div>
+    <div class="phase-wrap" id="phase-wrap-dynamic">
+      <!-- โหลดจาก Google Sheets อัตโนมัติ -->
+      <div style="color:var(--t3);font-size:14px;padding:1rem 0;">⏳ กำลังดึงข้อมูลจาก Google Sheets...</div>
     </div>
     </div>
   </div>
@@ -405,59 +437,8 @@ window.addEventListener('storage', e => {
         <div class="h-l">ทต.หลักหก ปี 69</div>
         <div class="h-b">ทต.บางปู ปี 69</div>
       </div>
-      <div class="cmp-row">
-        <div class="dim">ประเภท อปท.</div>
-        <div class="rc">เทศบาลเมือง</div>
-        <div class="lc">เทศบาลตำบล</div>
-        <div class="bc">เทศบาลตำบล</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">Entry point</div>
-        <div class="rc">สท.อ๊อด (ยืนยันแล้ว)</div>
-        <div class="lc">นายก + คุณแตน รพ.สต.</div>
-        <div class="bc">รองนายกเทศมนตรี</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">ภาคีสุขภาพ</div>
-        <div class="rc ok">✓ ม.มหิดล (ต่อเนื่อง)</div>
-        <div class="lc ok">✓ ม.รังสิต (อ.ษา)</div>
-        <div class="bc probe">⋯ รอยืนยัน</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">ภาคีสถาปัตย์</div>
-        <div class="rc ok">✓ มทร.รัตนโกสินทร์</div>
-        <div class="lc gap">⚠ ยังไม่มี</div>
-        <div class="bc probe">⋯ ลาดกระบัง — รอประสาน</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">Key Connector</div>
-        <div class="rc ok">✓ สท.อ๊อด + จนท.เขต</div>
-        <div class="lc probe">⋯ อ.ษา (กำลังพัฒนาบทบาท)</div>
-        <div class="bc probe">⋯ รองนายก</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">ฐานข้อมูลเปราะบาง</div>
-        <div class="rc">อสม. + รพ.สต. (อัปเดต)</div>
-        <div class="lc gap">⚠ มีเฉพาะ "ติดเตียง"</div>
-        <div class="bc probe">⋯ มีอยู่ — ไม่ทราบสถานะ</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">สถานะเทศบาล</div>
-        <div class="rc">เปิดใจ ต่อเนื่อง</div>
-        <div class="lc">นายกสนใจ / จนท.กังวลขั้นตอน</div>
-        <div class="bc ok">✓ ผู้บริหารมีวิสัยทัศน์ + เครือข่ายเอกชน</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">จุดแข็งเฉพาะ</div>
-        <div class="rc">มีบทเรียนปี 68 รองรับ</div>
-        <div class="lc">นักศึกษา 12 คน พร้อมลงพื้นที่</div>
-        <div class="bc">บริบทเมือง + งบ อปท. + เครือข่ายเอกชน</div>
-      </div>
-      <div class="cmp-row">
-        <div class="dim">สิ่งที่ต้องทำต่อไป</div>
-        <div class="rc">ประสานเครือข่ายเข้านำเสนอนายกฯ</div>
-        <div class="lc">ขอข้อมูลปัจจุบัน + ประสานทีม อสม. ดูความเป็นไปได้ในการสำรวจ</div>
-        <div class="bc">ยืนยันข้อมูลกลุ่มเปราะบาง + ประสาน ม.ลาดกระบัง</div>
+      <div id="cmp-body-dynamic">
+        <div class="cmp-row"><div class="dim" style="grid-column:1/-1;color:var(--t3);">⏳ กำลังดึงข้อมูล...</div></div>
       </div>
     </div>
   </div>
@@ -529,7 +510,7 @@ window.addEventListener('storage', e => {
       </div>
     </div>
 
-    <div class="footer">โครงการ R69-00219 · สถาบันอาศรมศิลป์ · สสส. · อัปเดตล่าสุด: มิถุนายน 2569</div>
+    <div class="footer">โครงการ R69-00219 · สถาบันอาศรมศิลป์ · สสส. · <span id="last-updated-label">อัปเดตล่าสุด: มิถุนายน 2569</span></div>
   </div>
 </section>
 
