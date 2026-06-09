@@ -137,34 +137,40 @@ const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
 const PHASE_NAMES = ['ประสานภาคี','สำรวจเบื้องต้น','คืนข้อมูล','สำรวจละเอียด','ออกแบบ','ปรับปรุงบ้าน','ติดตามผล'];
 const SITE_CSS = {rai:{cur:'cur-r',done:'done-r',color:'var(--rai)',light:'var(--rai-l)',mid:'var(--rai-m)'},lak:{cur:'cur-l',done:'done-l',color:'var(--lak)',light:'var(--lak-l)',mid:'var(--lak-m)'},bpu:{cur:'cur-b',done:'done-b',color:'var(--bpu)',light:'var(--bpu-l)',mid:'var(--bpu-m)'}};
 
-// ดึงข้อมูลผ่าน JSONP — ไม่ติด CORS
-function fetchSheet(sheetName) {
-  return new Promise((resolve, reject) => {
-    const cbName = 'cb_' + sheetName.replace(/\W/g,'_') + '_' + Date.now();
-    const script = document.createElement('script');
-    const url = `${SHEET_URL}/gviz/tq?tqx=out:json&tq=select+*&sheet=${encodeURIComponent(sheetName)}&callback=${cbName}`;
-    let done = false;
-    window[cbName] = (data) => {
-      done = true;
-      delete window[cbName];
-      script.remove();
-      try {
-        const cols = data.table.cols.map(c => c.label);
-        const rows = (data.table.rows || []).map(r => {
-          const obj = {};
-          (r.c || []).forEach((cell, i) => {
-            obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? String(cell.v) : '') : '';
-          });
-          return obj;
-        });
-        resolve(rows);
-      } catch(e) { reject(e); }
-    };
-    script.onerror = () => { if(!done){ delete window[cbName]; reject(new Error('script error')); } };
-    script.src = url;
-    document.head.appendChild(script);
-    setTimeout(() => { if(!done){ delete window[cbName]; script.remove(); reject(new Error('timeout')); } }, 8000);
+// GID ของแต่ละ sheet
+const SHEET_GIDS = { progress: '0', comparison: '978219681', scores: '880450376' };
+
+// ดึงข้อมูลผ่าน export CSV — ใช้ GID โดยตรง ไม่ติด CORS
+async function fetchSheet(sheetName) {
+  const gid = SHEET_GIDS[sheetName] || '0';
+  const url = `${SHEET_URL}/export?format=csv&gid=${gid}`;
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const text = await res.text();
+  const lines = text.trim().split('\n');
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+    return obj;
   });
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      result.push(cur.trim()); cur = '';
+    } else cur += ch;
+  }
+  result.push(cur.trim());
+  return result;
 }
 
 const SCORES_URL = `${SHEET_URL}/edit`;
