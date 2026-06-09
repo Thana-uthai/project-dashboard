@@ -133,21 +133,41 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
 <script>
 // ═══ Google Sheets Data Loader ═══
 const SHEET_ID = '1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
 const PHASE_NAMES = ['ประสานภาคี','สำรวจเบื้องต้น','คืนข้อมูล','สำรวจละเอียด','ออกแบบ','ปรับปรุงบ้าน','ติดตามผล'];
 const SITE_CSS = {rai:{cur:'cur-r',done:'done-r',color:'var(--rai)',light:'var(--rai-l)',mid:'var(--rai-m)'},lak:{cur:'cur-l',done:'done-l',color:'var(--lak)',light:'var(--lak-l)',mid:'var(--lak-m)'},bpu:{cur:'cur-b',done:'done-b',color:'var(--bpu)',light:'var(--bpu-l)',mid:'var(--bpu-m)'}};
 
-async function fetchSheet(sheetName) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-  const res = await fetch(url);
-  const text = await res.text();
-  const json = JSON.parse(text.replace(/.*google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, ''));
-  const cols = json.table.cols.map(c => c.label);
-  return json.table.rows.map(r => {
-    const obj = {};
-    r.c.forEach((cell, i) => { obj[cols[i]] = cell ? (cell.v !== null ? cell.v : '') : ''; });
-    return obj;
+// ดึงข้อมูลผ่าน JSONP — ไม่ติด CORS
+function fetchSheet(sheetName) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + sheetName.replace(/\W/g,'_') + '_' + Date.now();
+    const script = document.createElement('script');
+    const url = `${SHEET_URL}/gviz/tq?tqx=out:json&tq=select+*&sheet=${encodeURIComponent(sheetName)}&callback=${cbName}`;
+    let done = false;
+    window[cbName] = (data) => {
+      done = true;
+      delete window[cbName];
+      script.remove();
+      try {
+        const cols = data.table.cols.map(c => c.label);
+        const rows = (data.table.rows || []).map(r => {
+          const obj = {};
+          (r.c || []).forEach((cell, i) => {
+            obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? String(cell.v) : '') : '';
+          });
+          return obj;
+        });
+        resolve(rows);
+      } catch(e) { reject(e); }
+    };
+    script.onerror = () => { if(!done){ delete window[cbName]; reject(new Error('script error')); } };
+    script.src = url;
+    document.head.appendChild(script);
+    setTimeout(() => { if(!done){ delete window[cbName]; script.remove(); reject(new Error('timeout')); } }, 8000);
   });
 }
+
+const SCORES_URL = `${SHEET_URL}/edit`;
 
 function tagClass(tag) {
   if (tag.startsWith('✓')) return 'ptag-ok';
@@ -276,7 +296,7 @@ window.addEventListener('load', () => {
             <button onclick="piFilter('lak')" id="pf-lak" style="font-size:12px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--lak);color:var(--lak);background:transparent;cursor:pointer;font-family:inherit;">ทต.หลักหก</button>
             <button onclick="piFilter('bpu')" id="pf-bpu" style="font-size:12px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--bpu);color:var(--bpu);background:transparent;cursor:pointer;font-family:inherit;">ทต.บางปู</button>
           </div>
-          <a href="stakeholder_scores.html" target="_blank" style="margin-left:auto;font-size:13px;padding:6px 16px;border-radius:8px;border:1px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);white-space:nowrap;">✏️ แก้คะแนน ↗</a>
+          <a href="https://docs.google.com/spreadsheets/d/1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8/edit" target="_blank" style="margin-left:auto;font-size:13px;padding:6px 16px;border-radius:8px;border:1px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);white-space:nowrap;">✏️ แก้คะแนน ↗</a>
         </div>
 
         <div id="pi-grid" style="position:relative;flex:1;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
@@ -346,7 +366,7 @@ window.addEventListener('load', () => {
           </div>
         </div>
 
-        <a href="stakeholder_scores.html" target="_blank" style="display:block;text-align:center;font-size:14px;padding:10px 16px;border-radius:8px;border:1.5px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);transition:background .15s;">✏️ แก้ไขคะแนน ↗</a>
+        <a href="https://docs.google.com/spreadsheets/d/1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8/edit" target="_blank" style="display:block;text-align:center;font-size:14px;padding:10px 16px;border-radius:8px;border:1.5px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);transition:background .15s;">✏️ แก้ไขคะแนน ↗</a>
       </div>
 
     </div>
