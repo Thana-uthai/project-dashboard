@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทต.บางปู — Dashboard พื้นที่ปฏิบัติการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bpu: #B05000;
+  --bpu-light: #FFF0E6;
+  --bpu-mid: #F0A060;
+  --bpu-dark: #6B3000;
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --border: #E0DDD6;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9890;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-size: 15px; font-weight: 600; color: var(--text); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { font-size: 13px; padding: 6px 14px; border-radius: 6px; text-decoration: none; color: var(--text-2); transition: background 0.15s; }
+.nav-link:hover { background: var(--bg); }
+.nav-link.active { background: var(--bg); color: var(--text); font-weight: 500; }
+.nav-link.arc { color: var(--text-3); font-size: 12px; border: 1px dashed var(--border); }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+.site-hero { background: var(--bpu); border-radius: var(--radius); padding: 2rem 2.5rem; margin-bottom: 2rem; color: white; position: relative; overflow: hidden; }
+.site-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.site-hero::after { content: ''; position: absolute; right: 60px; bottom: -60px; width: 280px; height: 280px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+.hero-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #FFD700; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.hero-name { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+.hero-province { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+.hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.hero-stat-num { font-size: 28px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+.sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; margin-bottom: 14px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.stat-num { font-size: 24px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: var(--bpu); }
+.stat-num.na { color: var(--text-3); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.phase-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+.phase-steps { display: flex; gap: 0; margin-top: 12px; }
+.phase-step { flex: 1; padding: 10px 8px; text-align: center; font-size: 12px; border: 1px solid var(--border); border-right: none; }
+.phase-step:first-child { border-radius: 8px 0 0 8px; }
+.phase-step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+.phase-step.done { background: var(--bpu-light); border-color: var(--bpu-mid); color: var(--bpu); font-weight: 500; }
+.phase-step.current { background: var(--bpu-light); border-color: var(--bpu); color: var(--bpu); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--bpu); }
+.phase-step .step-num { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; display: block; margin-bottom: 3px; }
+.phase-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.ptag { font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+.ptag-wait { background: #FFF8E6; color: #7A5800; border: 1px solid #F0C040; }
+.ptag-gap { background: #FCEBEB; color: #791F1F; border: 1px solid #F09595; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 2rem; }
+.sh-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.sh-card.key { border-color: var(--bpu-mid); }
+.sh-card.gap-card { border-color: #F0C040; background: #FFFBEF; }
+.sh-role { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); text-transform: uppercase; margin-bottom: 4px; }
+.sh-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.sh-desc { font-size: 13px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+.sh-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+.sh-tag.confirmed { background: var(--bpu-light); color: var(--bpu); }
+.sh-tag.interest { background: var(--bpu-light); color: var(--bpu); }
+.sh-tag.pending { background: #FFF8E6; color: #7A5800; }
+.sh-tag.missing { background: #FCEBEB; color: #791F1F; }
+
+.highlight-box { background: var(--bpu-light); border: 1px solid var(--bpu-mid); border-left: 4px solid var(--bpu); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 2rem; }
+.highlight-box h3 { font-size: 13px; font-weight: 600; color: var(--bpu-dark); margin-bottom: 8px; }
+.highlight-box p { font-size: 13px; color: var(--bpu); line-height: 1.6; }
+
+.constraint-block { border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.cb-warn { background: #FFFBEF; border: 1px solid #F0C040; }
+.cb-info { background: var(--bpu-light); border: 1px solid var(--bpu-mid); }
+.constraint-block h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.cb-warn h3 { color: #7A5800; }
+.cb-info h3 { color: var(--bpu); }
+.constraint-list { list-style: none; }
+.constraint-list li { font-size: 13px; padding: 3px 0; }
+.cb-warn .constraint-list li { color: #7A5800; }
+.cb-warn .constraint-list li::before { content: '⚠ '; font-size: 11px; }
+.cb-info .constraint-list li { color: var(--bpu-dark); }
+.cb-info .constraint-list li::before { content: '✓ '; font-size: 11px; }
+
+/* diff table */
+.diff-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.diff-head { display: grid; grid-template-columns: 28% 1fr 1fr; background: var(--bg); border-bottom: 1px solid var(--border); }
+.diff-row { display: grid; grid-template-columns: 28% 1fr 1fr; border-bottom: 1px solid var(--border); }
+.diff-row:last-child { border-bottom: none; }
+.diff-head > div, .diff-row > div { padding: 9px 12px; font-size: 13px; }
+.diff-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.diff-head .h-rai { color: #1A7A56; }
+.diff-head .h-bpu { color: var(--bpu); }
+.diff-row .dim { font-weight: 500; font-size: 12px; color: var(--text-2); background: var(--bg); }
+.diff-row .rai-c { border-left: 2px solid #E6F5EE; color: var(--text-2); }
+.diff-row .bpu-c { border-left: 2px solid var(--bpu-light); }
+.diff-row .bpu-c.gap { color: #B85000; }
+.diff-row .bpu-c.ok { color: var(--bpu-dark); font-weight: 500; }
+.diff-row .bpu-c.probe { color: #7A5800; }
+
+.footer { border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.5rem; display: flex; justify-content: space-between; }
+.footer p { font-size: 12px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน</div>
+  <div class="nav-links">
+    <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
+    <a href="dashboard_raiking69.html" class="nav-link">ทม.ไร่ขิง</a>
+    <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+    <a href="dashboard_bangpu.html" class="nav-link active">ทต.บางปู</a>
+    <a href="dashboard_raiking.html" class="nav-link arc">ไร่ขิง ปี 68 ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="site-hero">
+    <div class="hero-badge"><span class="status-dot"></span> สำรวจความเป็นไปได้ — พื้นที่ขยายผล</div>
+    <div class="hero-name">เทศบาลตำบลบางปู</div>
+    <div class="hero-province">จ.สมุทรปราการ — ปี 2569 (อยู่ในระยะเตรียมการ)</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num" id="stat-phase-bpu">1/7</div><div class="hero-stat-label">ระยะที่ดำเนินการอยู่</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-label">ภาคีที่ประสานแล้ว</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">Private</div><div class="hero-stat-label">จุดเด่น: เครือข่ายเอกชน</div></div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h3>🌟 จุดเด่นของบางปู — โอกาสโมเดล Public-Private</h3>
+    <p>ผู้บริหารมีวิสัยทัศน์และมีเครือข่ายเอกชนในพื้นที่ ซึ่งอาจเปิดโอกาสสำหรับโมเดลการระดมทุนร่วม (Public-Private Partnership) ที่ไม่พบในไร่ขิงหรือหลักหก — นี่คือจุดที่น่าทดลองขยายผลสำหรับข้อเสนอเชิงนโยบายด้านแหล่งงบประมาณที่ยั่งยืน</p>
+  </div>
+
+  <div class="sec-label">ตัวชี้วัดหลัก — ปี 2569</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num" id="stat-phase-num-bpu">1/7</div><div class="stat-label">ระยะที่ดำเนินการอยู่</div></div>
+    <div class="stat-card"><div class="stat-num na">—</div><div class="stat-label">รายที่สำรวจ (รอระยะ 4)</div></div>
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">ภาคีที่ประสานเบื้องต้น</div></div>
+    <div class="stat-card"><div class="stat-num na">?</div><div class="stat-label">จำนวนบ้านเป้าหมาย</div></div>
+  </div>
+
+  <div class="sec-label">ระยะกระบวนการ (ดึงจาก Google Sheets)</div>
+  <div class="phase-card">
+    <p style="font-size:13px;color:var(--bpu);" id="phase-status-bpu">● อยู่ในระยะที่ 1 — ประสานภาคีและสำรวจความเป็นไปได้</p>
+    <div class="phase-steps" id="phase-steps-bpu">
+      <div class="phase-step current"><span class="step-num">1</span>ประสานภาคี</div>
+      <div class="phase-step"><span class="step-num">2</span>สำรวจเบื้องต้น</div>
+      <div class="phase-step"><span class="step-num">3</span>คืนข้อมูล</div>
+      <div class="phase-step"><span class="step-num">4</span>สำรวจละเอียด</div>
+      <div class="phase-step"><span class="step-num">5</span>ออกแบบ</div>
+      <div class="phase-step"><span class="step-num">6</span>ปรับปรุงบ้าน</div>
+      <div class="phase-step"><span class="step-num">7</span>ติดตามผล</div>
+    </div>
+    <div class="phase-tags" id="phase-tags-bpu"></div>
+  </div>
+
+  <div class="sec-label">ภาคีหลักและสถานะ</div>
+  <div class="grid2">
+    <div class="sh-card key">
+      <div class="sh-role">ผู้บริหาร อปท.</div>
+      <div class="sh-name">รองนายก ทต.บางปู</div>
+      <div class="sh-desc">มีวิสัยทัศน์และเครือข่ายเอกชน · สนับสนุนโครงการในหลักการ</div>
+      <span class="sh-tag confirmed">พูดคุยเบื้องต้นแล้ว</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">เจ้าหน้าที่ อปท.</div>
+      <div class="sh-name">จนท.สวัสดิการสังคม ทต.บางปู</div>
+      <div class="sh-desc">รับผิดชอบข้อมูลกลุ่มเปราะบาง · ประสานงานในพื้นที่</div>
+      <span class="sh-tag interest">มีความสนใจ</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">สาธารณสุข</div>
+      <div class="sh-name">สาธารณสุขชุมชน ทต.บางปู</div>
+      <div class="sh-desc">มีข้อมูลกลุ่มผู้สูงอายุในพื้นที่ · กำลังคนพอทำได้</div>
+      <span class="sh-tag interest">มีความสนใจ</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">ภาคีวิชาการ</div>
+      <div class="sh-name">สถาบันเทคโนโลยีพระจอมเกล้าฯ ลาดกระบัง</div>
+      <div class="sh-desc">อยู่ในพื้นที่ใกล้เคียง · คณะสถาปัตยกรรมศาสตร์</div>
+      <span class="sh-tag pending">อยู่ระหว่างติดต่อ</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">แกนนำชุมชน</div>
+      <div class="sh-name">ชุมชนในพื้นที่บางปู</div>
+      <div class="sh-desc">อสม. และแกนนำชุมชน · ยังไม่ได้พบอย่างเป็นทางการ</div>
+      <span class="sh-tag pending">วางแผนประสาน</span>
+    </div>
+    <div class="sh-card gap-card">
+      <div class="sh-role" style="color:#B85000;">ช่องว่างสำคัญ</div>
+      <div class="sh-name" style="color:#B85000;">ผู้ประสานงานกลาง — ยังไม่มี</div>
+      <div class="sh-desc" style="color:#7A5800;">ต้องมีคนทำหน้าที่เชื่อมชุมชน-เทศบาล-วิชาการ (เปรียบเหมือน สท.อ๊อด ในไร่ขิง)</div>
+      <span class="sh-tag missing">⚠ ต้องดำเนินการ</span>
+    </div>
+  </div>
+
+  <div style="margin-bottom:2rem;">
+    <div class="constraint-block cb-warn" style="margin-bottom:12px;">
+      <h3>⚠ สิ่งที่ยังต้องดำเนินการก่อน</h3>
+      <ul class="constraint-list">
+        <li>ยืนยันภาคีสถาปัตย์ (สจล. หรือแหล่งอื่น)</li>
+        <li>หาผู้ประสานงานกลางในพื้นที่</li>
+        <li>กำหนดขอบเขตพื้นที่เป้าหมายกับ อสม.</li>
+        <li>ทดสอบโมเดล Public-Private กับรองนายก</li>
+      </ul>
+    </div>
+    <div class="constraint-block cb-info">
+      <h3>✓ ข้อได้เปรียบที่บางปูมี</h3>
+      <ul class="constraint-list">
+        <li>รองนายกมีวิสัยทัศน์และเครือข่ายเอกชน</li>
+        <li>จนท.สวัสดิการมีฐานข้อมูลกลุ่มเปราะบาง</li>
+        <li>ที่ตั้ง — ใกล้ สจล. (ภาคีวิชาการที่เป็นไปได้)</li>
+        <li>เป็นพื้นที่อุตสาหกรรม — มีช่องทาง CSR/เอกชน</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-label">เปรียบเทียบกับ ทม.ไร่ขิง</div>
+  <div class="diff-table">
+    <div class="diff-head">
+      <div>มิติ</div>
+      <div class="h-rai">ทม.ไร่ขิง (บทเรียน)</div>
+      <div class="h-bpu">ทต.บางปู (สถานะปัจจุบัน)</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ภาคีสถาปัตย์</div>
+      <div class="rai-c">มทร.รัตนโกสินทร์ — ยืนยันก่อนระยะ 4</div>
+      <div class="bpu-c probe">⋯ สจล. — อยู่ระหว่างติดต่อ</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">Key Connector</div>
+      <div class="rai-c">สท.อ๊อด — ยืนยันแต่เนิ่นๆ</div>
+      <div class="bpu-c gap">⚠ ยังไม่มี — ปัจจัยชี้ขาด</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">โมเดลงบประมาณ</div>
+      <div class="rai-c">งบ สสส. + สำรวจ พมจ./พอช.</div>
+      <div class="bpu-c ok">✓ มีโอกาส Public-Private (เครือข่ายเอกชน)</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">บทบาทผู้บริหาร</div>
+      <div class="rai-c">นายกสนับสนุน + สท.อ๊อดผลักดัน</div>
+      <div class="bpu-c ok">✓ รองนายกมีวิสัยทัศน์สูง</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ฐานข้อมูลเปราะบาง</div>
+      <div class="rai-c">อสม. + รพ.สต. + ชมรม ครอบคลุม</div>
+      <div class="bpu-c probe">⋯ จนท.สวัสดิการมี — ต้องครอสเช็ค</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ขนาด อปท.</div>
+      <div class="rai-c">เทศบาลเมือง — ทรัพยากรมาก</div>
+      <div class="bpu-c probe">⋯ เทศบาลตำบล แต่มีเครือข่ายภาคเอกชน</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>ทต.บางปู · หลักสูตรขบวนการชุมชน · R69-00219</p>
+    <p>อัปเดตล่าสุด: มิถุนายน 2569</p>
+  </div>
+
+</div>
+
+<script>
+const SHEET_ID = '1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8';
+const PHASE_NAMES = ['ประสานภาคี','สำรวจเบื้องต้น','คืนข้อมูล','สำรวจละเอียด','ออกแบบ','ปรับปรุงบ้าน','ติดตามผล'];
+
+function parseCSVLine(line) {
+  const result = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { if (inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+    else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else cur += ch;
+  }
+  result.push(cur.trim()); return result;
+}
+
+async function loadPhase() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+    const res = await fetch(url, { mode: 'cors' });
+    const text = await res.text();
+    const lines = text.trim().split('\n');
+    const headers = parseCSVLine(lines[0]);
+    const rows = lines.slice(1).filter(l => l.trim()).map(line => {
+      const vals = parseCSVLine(line); const obj = {};
+      headers.forEach((h, i) => { obj[h] = vals[i] || ''; }); return obj;
+    });
+    const row = rows.find(r => r.site === 'bpu');
+    if (!row) return;
+    const cur = parseInt(row.phase_current) || 1;
+
+    document.getElementById('stat-phase-bpu').textContent = `${cur}/7`;
+    document.getElementById('stat-phase-num-bpu').textContent = `${cur}/7`;
+    document.getElementById('phase-status-bpu').textContent = `● อยู่ในระยะที่ ${cur} — ${PHASE_NAMES[cur-1] || ''}`;
+
+    const stepsEl = document.getElementById('phase-steps-bpu');
+    stepsEl.innerHTML = PHASE_NAMES.map((name, i) => {
+      const n = i + 1;
+      const cls = n === cur ? 'current' : n < cur ? 'done' : '';
+      return `<div class="phase-step ${cls}"><span class="step-num">${n}</span>${name}</div>`;
+    }).join('');
+
+    const tags = [row.tag1, row.tag2, row.tag3].filter(Boolean);
+    const tagsEl = document.getElementById('phase-tags-bpu');
+    tagsEl.innerHTML = tags.map(t => {
+      if (t.startsWith('✓')) return `<span class="ptag" style="background:var(--bpu-light);color:var(--bpu);border:1px solid var(--bpu-mid);">${t}</span>`;
+      if (t.startsWith('⚠')) return `<span class="ptag ptag-gap">${t}</span>`;
+      return `<span class="ptag ptag-wait">${t}</span>`;
+    }).join('');
+  } catch(e) { console.warn('ดึงข้อมูล phase ไม่ได้:', e); }
+}
+
+window.addEventListener('load', loadPhase);
+</script>
+</body>
+</html>

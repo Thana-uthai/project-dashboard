@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ทม.ไร่ขิง — Dashboard พื้นที่ปฏิบัติการ</title>
+<title>ทม.ไร่ขิง ปี 2568 — ข้อมูลอ้างอิง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -30,12 +30,13 @@
 body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
 
 nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
-.nav-logo { font-size: 14px; font-weight: 600; color: var(--text); }
+.nav-logo { font-size: 15px; font-weight: 600; color: var(--text); }
 .nav-logo span { font-size: 11px; font-weight: 400; color: var(--text-3); display: block; }
 .nav-links { display: flex; gap: 4px; }
 .nav-link { font-size: 13px; padding: 6px 14px; border-radius: 6px; text-decoration: none; color: var(--text-2); transition: background 0.15s; }
 .nav-link:hover { background: var(--bg); }
 .nav-link.active { background: var(--bg); color: var(--text); font-weight: 500; }
+.nav-link.arc { color: var(--text-3); font-size: 12px; border: 1px dashed var(--border); }
 
 .container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
 
@@ -140,11 +141,13 @@ nav { background: var(--white); border-bottom: 1px solid var(--border); padding:
 <body>
 
 <nav>
-  <div class="nav-logo">หลักสูตรขบวนการชุมชน <span>ปรับปรุงที่อยู่อาศัยกลุ่มเปราะบาง — R69-00219</span></div>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน</div>
   <div class="nav-links">
     <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
-    <a href="dashboard_raiking.html" class="nav-link active">ทม.ไร่ขิง</a>
+    <a href="dashboard_raiking69.html" class="nav-link">ทม.ไร่ขิง</a>
     <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+    <a href="dashboard_bangpu.html" class="nav-link">ทต.บางปู</a>
+    <a href="dashboard_raiking.html" class="nav-link active arc">ไร่ขิง ปี 68 ↗</a>
   </div>
 </nav>
 

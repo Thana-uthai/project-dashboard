@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard เปรียบเทียบพื้นที่ปฏิบัติการ</title>
+<title>หลักสูตรปรับปรุงบ้านกลุ่มเปราะบาง — ภาพรวม</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,57 +21,25 @@
 html{scroll-snap-type:y mandatory;scroll-behavior:smooth;}
 body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:20px;line-height:1.7;}
 
-/* NAV */
 nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:fixed;top:0;width:100%;z-index:200;}
-.nav-logo{font-size:16px;font-weight:600;color:var(--text);}
-.nav-logo span{font-size:13px;font-weight:400;color:var(--t3);display:block;}
+.nav-logo{font-size:17px;font-weight:600;color:var(--text);}
 .nav-links{display:flex;gap:4px;align-items:center;}
 .nav-link{font-size:15px;padding:8px 18px;border-radius:7px;text-decoration:none;color:var(--t2);transition:background .15s;}
 .nav-link:hover{background:var(--bg);}
 .nav-link.active{background:var(--bg);color:var(--text);font-weight:500;}
 .nav-link.arc{color:var(--t3);font-size:14px;border:1px dashed var(--border);}
 
-/* SLIDE SECTIONS */
 .slide{min-height:100vh;scroll-snap-align:start;padding:88px 0 48px;display:flex;flex-direction:column;justify-content:center;}
 .slide-inner{max-width:1200px;margin:0 auto;padding:0 3rem;width:100%;}
-
-/* SLIDE LABEL */
 .slide-num{font-size:13px;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:14px;}
 
-/* HERO SLIDE */
 .hero-title{font-size:52px;font-weight:600;letter-spacing:-.02em;color:var(--text);margin-bottom:14px;line-height:1.15;}
-.hero-sub{font-size:22px;color:var(--t2);margin-bottom:3rem;}
+.hero-sub{font-size:20px;color:var(--t2);margin-bottom:3rem;}
 .hero-chips{display:flex;gap:12px;flex-wrap:wrap;}
 .chip{font-size:16px;padding:8px 20px;border-radius:24px;border:1px solid var(--border);color:var(--t2);}
 
-/* SEC LABEL */
 .sec-label{font-size:14px;font-weight:600;letter-spacing:.07em;color:var(--t3);text-transform:uppercase;margin-bottom:24px;}
 
-/* SITE CARDS */
-.site-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:0;}
-.site-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:1.75rem 2rem;text-decoration:none;color:inherit;transition:box-shadow .15s,transform .1s;display:flex;flex-direction:column;gap:16px;}
-.site-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.09);transform:translateY(-2px);}
-.site-card.rai{border-color:var(--rai);}
-.site-card.lak{border-color:var(--lak);}
-.site-card.bpu{border-color:var(--bpu);}
-.card-header{display:flex;align-items:center;gap:12px;}
-.cdot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
-.cdot-rai{background:var(--rai);} .cdot-lak{background:var(--lak);} .cdot-bpu{background:var(--bpu);} .cdot-arc{background:var(--arc);}
-.card-name{font-size:18px;font-weight:600;}
-.card-prov{font-size:13px;color:var(--t3);}
-.card-badge{font-size:12px;padding:3px 10px;border-radius:20px;margin-left:auto;white-space:nowrap;}
-.b-rai{background:var(--rai-l);color:var(--rai);}
-.b-lak{background:var(--lak-l);color:var(--lak);}
-.b-bpu{background:var(--bpu-l);color:var(--bpu);}
-.card-stats{display:flex;justify-content:space-between;gap:8px;}
-.stat-item{text-align:center;flex:1;}
-.stat-num{font-size:26px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
-.stat-num.rai{color:var(--rai);} .stat-num.lak{color:var(--lak);} .stat-num.bpu{color:var(--bpu);}
-.stat-label{font-size:12px;color:var(--t3);margin-top:2px;}
-.card-status{font-size:13px;color:var(--t2);border-top:1px solid var(--border);padding-top:12px;display:flex;align-items:center;gap:7px;}
-.pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-
-/* PHASE BARS */
 .phase-wrap{display:flex;flex-direction:column;gap:32px;}
 .phase-row{display:flex;align-items:flex-start;gap:20px;}
 .phase-lbl{font-size:20px;font-weight:600;color:var(--text);min-width:180px;padding-top:10px;line-height:1.3;}
@@ -92,7 +60,6 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
 .ptag-wait{background:#FFF8E6;color:#7A5800;border:1px solid #F0C040;}
 .ptag-gap{background:#FCEBEB;color:#791F1F;border:1px solid #F09595;}
 
-/* COMPARE TABLE */
 .cmp{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
 .cmp-head{display:grid;grid-template-columns:22% 1fr 1fr 1fr;background:var(--bg);border-bottom:1px solid var(--border);}
 .cmp-head>div{padding:15px 18px;font-size:16px;font-weight:600;color:var(--t2);}
@@ -104,19 +71,16 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
 .rc{border-left:3px solid var(--rai-l);} .lc{border-left:3px solid var(--lak-l);} .bc{border-left:3px solid var(--bpu-l);}
 .ok{color:var(--rai);} .gap{color:#B85000;} .probe{color:#7A5800;} .muted{color:var(--t3);font-style:italic;}
 
-/* CORE GRID */
 .core-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
 .core-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rs);padding:1.75rem 2rem;}
 .core-icon{font-size:30px;margin-bottom:12px;}
 .core-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:8px;}
 .core-desc{font-size:15px;color:var(--t2);line-height:1.65;}
 
-/* INSIGHT */
 .insight{background:#FFFBEF;border:1px solid #F0C040;border-radius:var(--r);padding:2rem 2.25rem;}
 .insight h3{font-size:18px;font-weight:600;color:#6B4E00;margin-bottom:12px;}
 .insight p{font-size:16px;color:#7A5800;line-height:1.8;}
 
-/* ARCHIVE SLIDE */
 .arc-card{background:var(--white);border:1.5px dashed var(--border);border-radius:var(--r);padding:1.75rem 2rem;display:flex;align-items:center;gap:20px;margin-bottom:16px;}
 .arc-text .arc-title{font-size:17px;font-weight:600;color:var(--t2);}
 .arc-text .arc-desc{font-size:14px;color:var(--t3);margin-top:2px;}
@@ -124,23 +88,16 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2.5r
 .arc-link{font-size:13px;color:var(--t3);text-decoration:none;border:1px solid var(--border);border-radius:7px;padding:5px 14px;white-space:nowrap;}
 .arc-link:hover{background:var(--bg);}
 
-/* DIVIDER */
 .slide-divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
-
-/* FOOTER */
 .footer{text-align:center;font-size:13px;color:var(--t3);padding:2rem 0 3rem;}
 </style>
 <script>
-// ═══ Google Sheets Data Loader ═══
 const SHEET_ID = '1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
 const PHASE_NAMES = ['ประสานภาคี','สำรวจเบื้องต้น','คืนข้อมูล','สำรวจละเอียด','ออกแบบ','ปรับปรุงบ้าน','ติดตามผล'];
 const SITE_CSS = {rai:{cur:'cur-r',done:'done-r',color:'var(--rai)',light:'var(--rai-l)',mid:'var(--rai-m)'},lak:{cur:'cur-l',done:'done-l',color:'var(--lak)',light:'var(--lak-l)',mid:'var(--lak-m)'},bpu:{cur:'cur-b',done:'done-b',color:'var(--bpu)',light:'var(--bpu-l)',mid:'var(--bpu-m)'}};
-
-// GID ของแต่ละ sheet
 const SHEET_GIDS = { progress: '0', comparison: '978219681', scores: '880450376' };
 
-// ดึงข้อมูลผ่าน export CSV — ใช้ GID โดยตรง ไม่ติด CORS
 async function fetchSheet(sheetName) {
   const gid = SHEET_GIDS[sheetName] || '0';
   const url = `${SHEET_URL}/export?format=csv&gid=${gid}`;
@@ -172,8 +129,6 @@ function parseCSVLine(line) {
   result.push(cur.trim());
   return result;
 }
-
-const SCORES_URL = `${SHEET_URL}/edit`;
 
 function tagClass(tag) {
   if (tag.startsWith('✓')) return 'ptag-ok';
@@ -207,11 +162,8 @@ async function loadProgress() {
         <div class="phase-lbl">${row.site_name}<small>ปี ${row.year} — ${row.province}</small></div>
         <div class="phase-col">${renderPhase(row)}</div>
       </div>`).join('');
-    // อัปเดต section label
-    const allPhase = rows.every(r => parseInt(r.phase_current) === parseInt(rows[0].phase_current));
     const label = document.getElementById('phase-section-label');
-    if (label && allPhase) label.textContent = `ความคืบหน้ากระบวนการ 7 ระยะ — ทุกพื้นที่อยู่ระยะที่ ${rows[0].phase_current}`;
-    // อัปเดต last_updated
+    if (label) label.textContent = `ความคืบหน้ากระบวนการ 7 ระยะ`;
     const updated = [...new Set(rows.map(r => r.last_updated).filter(Boolean))].join(', ');
     const footer = document.getElementById('last-updated-label');
     if (footer) footer.textContent = `อัปเดตล่าสุด: ${updated}`;
@@ -248,28 +200,29 @@ async function loadScores() {
 window.addEventListener('load', () => {
   loadProgress();
   loadComparison();
-  setTimeout(loadScores, 300); // รอให้ piRender พร้อมก่อน
+  setTimeout(loadScores, 300);
 });
 </script>
 </head>
 <body>
 
 <nav>
-  <div class="nav-logo">หลักสูตรขบวนการชุมชน <span>ปรับปรุงที่อยู่อาศัยกลุ่มเปราะบาง — R69-00219</span></div>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน</div>
   <div class="nav-links">
     <a href="dashboard_main.html" class="nav-link active">ภาพรวม</a>
-    <a href="dashboard_raiking.html" class="nav-link">ทม.ไร่ขิง</a>
+    <a href="dashboard_raiking69.html" class="nav-link">ทม.ไร่ขิง</a>
     <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+    <a href="dashboard_bangpu.html" class="nav-link">ทต.บางปู</a>
     <a href="dashboard_raiking.html" class="nav-link arc">ไร่ขิง ปี 68 ↗</a>
   </div>
 </nav>
 
-<!-- ═══ SLIDE 1: HERO ═══ -->
+<!-- SLIDE 1: HERO -->
 <section class="slide" style="background:var(--white);">
   <div class="slide-inner">
     <div class="slide-num">01 — ภาพรวม</div>
-    <div class="hero-title">เปรียบเทียบ<br>พื้นที่ปฏิบัติการ ปี 2569</div>
-    <div class="hero-sub">สังเคราะห์บทเรียนเพื่อพัฒนาข้อเสนอแนะเชิงนโยบาย<br>หลักสูตรขบวนการชุมชน · R69-00219 · สถาบันอาศรมศิลป์</div>
+    <div class="hero-title">หลักสูตร<br>ปรับปรุงบ้านกลุ่มเปราะบาง</div>
+    <div class="hero-sub">สังเคราะห์บทเรียนเพื่อพัฒนาข้อเสนอแนะเชิงนโยบาย</div>
     <div class="hero-chips">
       <span class="chip" style="background:var(--rai-l);color:var(--rai);border-color:var(--rai-m);">● ทม.ไร่ขิง — ขยายผล ปี 2</span>
       <span class="chip" style="background:var(--lak-l);color:var(--lak);border-color:var(--lak-m);">● ทต.หลักหก — พื้นที่ใหม่</span>
@@ -279,20 +232,18 @@ window.addEventListener('load', () => {
     <div style="margin-top:3rem;">
     <div class="sec-label" id="phase-section-label">ความคืบหน้ากระบวนการ 7 ระยะ — กำลังโหลด...</div>
     <div class="phase-wrap" id="phase-wrap-dynamic">
-      <!-- โหลดจาก Google Sheets อัตโนมัติ -->
       <div style="color:var(--t3);font-size:14px;padding:1rem 0;">⏳ กำลังดึงข้อมูลจาก Google Sheets...</div>
     </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SLIDE 2: STAKEHOLDER POWER-INTEREST GRID ═══ -->
+<!-- SLIDE 2: STAKEHOLDER -->
 <section class="slide" style="background:var(--bg);">
   <div class="slide-inner" style="max-width:1300px;">
     <div class="slide-num">02 — Stakeholder Analysis</div>
     <div style="display:grid;grid-template-columns:1fr 260px;gap:28px;height:calc(100vh - 140px);align-items:center;">
 
-      <!-- GRID -->
       <div style="display:flex;flex-direction:column;gap:12px;height:100%;">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="font-size:15px;font-weight:600;color:var(--text);">Power–Interest Grid</div>
@@ -302,77 +253,61 @@ window.addEventListener('load', () => {
             <button onclick="piFilter('lak')" id="pf-lak" style="font-size:12px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--lak);color:var(--lak);background:transparent;cursor:pointer;font-family:inherit;">ทต.หลักหก</button>
             <button onclick="piFilter('bpu')" id="pf-bpu" style="font-size:12px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--bpu);color:var(--bpu);background:transparent;cursor:pointer;font-family:inherit;">ทต.บางปู</button>
           </div>
-          <a href="https://docs.google.com/spreadsheets/d/1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8/edit" target="_blank" style="margin-left:auto;font-size:13px;padding:6px 16px;border-radius:8px;border:1px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);white-space:nowrap;">✏️ แก้คะแนน ↗</a>
+          <a href="stakeholder_scores.html" style="margin-left:auto;font-size:13px;padding:6px 16px;border-radius:8px;border:1px solid var(--border);color:var(--t2);text-decoration:none;background:var(--white);white-space:nowrap;">✏️ แก้คะแนน</a>
         </div>
 
-        <div id="pi-grid" style="position:relative;flex:1;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
-          <!-- quadrants -->
+        <div id="pi-grid" style="position:relative;flex:1;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
           <div style="position:absolute;top:0;left:0;width:50%;height:50%;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(90,90,90,.04);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 14px;">
-            <div style="font-size:14px;font-weight:500;color:var(--text-2);">เข้าใจและรักษา</div>
-            <div style="font-size:11px;color:var(--text-3);">power สูง · interest ต่ำ</div>
+            <div style="font-size:14px;font-weight:500;color:var(--t2);">เข้าใจและรักษา</div>
+            <div style="font-size:11px;color:var(--t3);">power สูง · interest ต่ำ</div>
           </div>
           <div style="position:absolute;top:0;right:0;width:50%;height:50%;border-bottom:1px solid var(--border);background:rgba(26,122,86,.05);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 14px;">
-            <div style="font-size:14px;font-weight:500;color:var(--text-2);">ดึงร่วม — สำคัญสุด</div>
-            <div style="font-size:11px;color:var(--text-3);">power สูง · interest สูง</div>
+            <div style="font-size:14px;font-weight:500;color:var(--t2);">ดึงร่วม — สำคัญสุด</div>
+            <div style="font-size:11px;color:var(--t3);">power สูง · interest สูง</div>
           </div>
           <div style="position:absolute;bottom:0;left:0;width:50%;height:50%;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 14px;">
-            <div style="font-size:14px;font-weight:500;color:var(--text-2);">ติดตาม</div>
-            <div style="font-size:11px;color:var(--text-3);">power ต่ำ · interest ต่ำ</div>
+            <div style="font-size:14px;font-weight:500;color:var(--t2);">ติดตาม</div>
+            <div style="font-size:11px;color:var(--t3);">power ต่ำ · interest ต่ำ</div>
           </div>
           <div style="position:absolute;bottom:0;right:0;width:50%;height:50%;background:rgba(90,90,90,.03);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 14px;">
-            <div style="font-size:14px;font-weight:500;color:var(--text-2);">แจ้งข้อมูลสม่ำเสมอ</div>
-            <div style="font-size:11px;color:var(--text-3);">power ต่ำ · interest สูง</div>
+            <div style="font-size:14px;font-weight:500;color:var(--t2);">แจ้งข้อมูลสม่ำเสมอ</div>
+            <div style="font-size:11px;color:var(--t3);">power ต่ำ · interest สูง</div>
           </div>
-          <!-- axis labels -->
-          <span style="position:absolute;bottom:6px;left:10px;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;">interest ต่ำ</span>
-          <span style="position:absolute;bottom:6px;right:10px;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;">interest สูง →</span>
-          <span style="position:absolute;left:5px;bottom:14px;font-size:10px;color:var(--text-3);writing-mode:vertical-lr;transform:rotate(180deg);letter-spacing:.05em;">power ต่ำ</span>
-          <span style="position:absolute;left:5px;top:14px;font-size:10px;color:var(--text-3);writing-mode:vertical-lr;transform:rotate(180deg);letter-spacing:.05em;">↑ power สูง</span>
-          <!-- tooltip -->
-          <div id="pi-tip" style="position:absolute;display:none;background:var(--white);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12px;line-height:1.6;color:var(--text-2);width:170px;z-index:30;pointer-events:none;"></div>
+          <span style="position:absolute;bottom:6px;left:10px;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;">interest ต่ำ</span>
+          <span style="position:absolute;bottom:6px;right:10px;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;">interest สูง →</span>
+          <span style="position:absolute;left:5px;bottom:14px;font-size:10px;color:var(--t3);writing-mode:vertical-lr;transform:rotate(180deg);letter-spacing:.05em;">power ต่ำ</span>
+          <span style="position:absolute;left:5px;top:14px;font-size:10px;color:var(--t3);writing-mode:vertical-lr;transform:rotate(180deg);letter-spacing:.05em;">↑ power สูง</span>
+          <div id="pi-tip" style="position:absolute;display:none;background:var(--white);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12px;line-height:1.6;color:var(--t2);width:170px;z-index:30;pointer-events:none;"></div>
         </div>
       </div>
 
-      <!-- RIGHT LEGEND -->
       <div style="display:flex;flex-direction:column;gap:20px;padding:4px 0;">
         <div>
-          <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">พื้นที่ (สี)</div>
+          <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">พื้นที่ (สี)</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:14px;height:14px;border-radius:50%;background:var(--rai);flex-shrink:0;"></div>
-              <div style="font-size:14px;color:var(--text);">ทม.ไร่ขิง</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:14px;height:14px;border-radius:50%;background:var(--lak);flex-shrink:0;"></div>
-              <div style="font-size:14px;color:var(--text);">ทต.หลักหก</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:14px;height:14px;border-radius:50%;background:var(--bpu);flex-shrink:0;"></div>
-              <div style="font-size:14px;color:var(--text);">ทต.บางปู</div>
-            </div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:var(--rai);flex-shrink:0;"></div><div style="font-size:14px;color:var(--text);">ทม.ไร่ขิง</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:var(--lak);flex-shrink:0;"></div><div style="font-size:14px;color:var(--text);">ทต.หลักหก</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:var(--bpu);flex-shrink:0;"></div><div style="font-size:14px;color:var(--text);">ทต.บางปู</div></div>
           </div>
         </div>
-
         <div>
-          <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">กลุ่ม (สัญลักษณ์)</div>
+          <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">กลุ่ม (สัญลักษณ์)</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);">🏛 ผู้บริหาร อปท.</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);">📋 เจ้าหน้าที่ อปท.</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);">🏥 สาธารณสุข / รพ.สต.</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);">🎓 นักศึกษา / สถาปนิก</div>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);">👥 อสม. / แกนนำชุมชน</div>
+            <div style="font-size:14px;color:var(--text);">🏛 ผู้บริหาร อปท.</div>
+            <div style="font-size:14px;color:var(--text);">📋 เจ้าหน้าที่ อปท.</div>
+            <div style="font-size:14px;color:var(--text);">🏥 สาธารณสุข / รพ.สต.</div>
+            <div style="font-size:14px;color:var(--text);">🎓 นักศึกษา / สถาปนิก</div>
+            <div style="font-size:14px;color:var(--text);">👥 อสม. / แกนนำชุมชน</div>
           </div>
         </div>
-
         <div style="border-top:1px solid var(--border);padding-top:16px;">
-          <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">แกน</div>
-          <div style="font-size:13px;color:var(--text-2);line-height:1.7;">
+          <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">แกน</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.7;">
             <div><span style="font-weight:500;color:var(--text);">Power 1–5</span><br>อำนาจในการตัดสินใจ / ผลักดันหรือหยุดโครงการ</div>
             <div style="margin-top:8px;"><span style="font-weight:500;color:var(--text);">Interest 1–5</span><br>ความสนใจ / ได้รับผลกระทบโดยตรง</div>
           </div>
         </div>
-
-        <a href="https://docs.google.com/spreadsheets/d/1mIhyX6KfNRr8tBxyDJkZ1FZEdfCJttAVrntdsZgsvj8/edit" target="_blank" style="display:block;text-align:center;font-size:14px;padding:10px 16px;border-radius:8px;border:1.5px solid var(--border);color:var(--text-2);text-decoration:none;background:var(--white);transition:background .15s;">✏️ แก้ไขคะแนน ↗</a>
+        <a href="stakeholder_scores.html" style="display:block;text-align:center;font-size:14px;padding:10px 16px;border-radius:8px;border:1.5px solid var(--border);color:var(--t2);text-decoration:none;background:var(--white);transition:background .15s;">✏️ แก้ไขคะแนน</a>
       </div>
 
     </div>
@@ -451,10 +386,10 @@ window.addEventListener('storage', e => {
 });
 </script>
 
-<!-- ═══ SLIDE 3: COMPARE TABLE ═══ -->
+<!-- SLIDE 3: COMPARE TABLE -->
 <section class="slide" style="background:var(--white);">
   <div class="slide-inner">
-    <div class="slide-num">02 — ตารางเปรียบเทียบ</div>
+    <div class="slide-num">03 — ตารางเปรียบเทียบ</div>
     <div class="sec-label">เปรียบเทียบพื้นที่ที่ใช้งานอยู่</div>
     <div class="cmp">
       <div class="cmp-head">
@@ -470,10 +405,10 @@ window.addEventListener('storage', e => {
   </div>
 </section>
 
-<!-- ═══ SLIDE 4: CORE MODEL + INSIGHT ═══ -->
+<!-- SLIDE 4: CORE MODEL -->
 <section class="slide">
   <div class="slide-inner">
-    <div class="slide-num">03 — Core Model และข้อสังเกตเชิงนโยบาย</div>
+    <div class="slide-num">04 — Core Model และข้อสังเกตเชิงนโยบาย</div>
     <div class="sec-label">Core Model — องค์ประกอบที่ต้องมีในทุกพื้นที่</div>
     <div class="core-grid" style="margin-bottom:2.5rem;">
       <div class="core-card"><div class="core-icon">👥</div><div class="core-title">ทีมสหสาขา</div><div class="core-desc">สุขภาพ + สถาปัตย์ + ชุมชน ต้องทำงานร่วมกัน ขาดฝ่ายใดฝ่ายหนึ่งไม่ได้</div></div>
@@ -490,14 +425,14 @@ window.addEventListener('storage', e => {
   </div>
 </section>
 
-<!-- ═══ SLIDE 5: ARCHIVE ═══ -->
+<!-- SLIDE 5: ARCHIVE -->
 <section class="slide" style="background:var(--white);">
   <div class="slide-inner">
-    <div class="slide-num">04 — ข้อมูลอ้างอิง (พื้นที่ที่เสร็จสิ้นแล้ว)</div>
+    <div class="slide-num">05 — ข้อมูลอ้างอิง (พื้นที่ที่เสร็จสิ้นแล้ว)</div>
     <div class="sec-label">ไร่ขิง ปี 2568 — บทเรียนต้นแบบ</div>
 
     <div class="arc-card">
-      <span class="cdot cdot-arc" style="width:16px;height:16px;flex-shrink:0;"></span>
+      <span style="width:16px;height:16px;border-radius:50%;background:var(--arc);flex-shrink:0;display:inline-block;"></span>
       <div class="arc-text">
         <div class="arc-title">ทม.ไร่ขิง ปี 2568</div>
         <div class="arc-desc">พื้นที่นำร่อง · 21 ครั้งกระบวนการ · 5 หลังออกแบบ · 6 แบบ · เสร็จสมบูรณ์ครบ 6 ระยะ</div>
@@ -506,7 +441,6 @@ window.addEventListener('storage', e => {
       <a href="dashboard_raiking.html" class="arc-link">ดูรายละเอียด ↗</a>
     </div>
 
-    <!-- mini compare กับปี 69 -->
     <div class="sec-label" style="margin-top:2rem;">เปรียบเทียบ ปี 68 กับ ปี 69 — สิ่งที่ปรับปรุง</div>
     <div class="cmp">
       <div class="cmp-head" style="grid-template-columns:28% 1fr 1fr;">
