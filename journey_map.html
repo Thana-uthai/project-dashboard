@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pain Point Journey Map — หลักสูตรขบวนการชุมชน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rai:#1A7A56;--rai-l:#E6F5EE;--rai-m:#5DCAA5;
+  --lak:#1A5FA8;--lak-l:#E6F0FB;--lak-m:#85B7EB;
+  --bpu:#B05000;--bpu-l:#FFF0E6;--bpu-m:#F0A060;
+  --bg:#F7F6F3;--white:#FFFFFF;--border:#E0DDD6;
+  --text:#1A1A1A;--t2:#5A5A5A;--t3:#9A9890;--r:14px;--rs:10px;
+  --ok-bg:#E6F5EE;--ok-c:#0F5C3F;--ok-b:#5DCAA5;
+  --warn-bg:#FFF8E6;--warn-c:#7A5800;--warn-b:#F0C040;
+  --risk-bg:#FCEBEB;--risk-c:#791F1F;--risk-b:#F09595;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;}
+a{color:var(--lak);}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px;}
+.nav-logo{font-size:14px;font-weight:600;color:var(--text);}
+.nav-logo span{font-size:11px;font-weight:400;color:var(--t3);display:block;}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+.nav-link{font-size:13px;padding:6px 14px;border-radius:6px;text-decoration:none;color:var(--t2);transition:background .15s;}
+.nav-link:hover{background:var(--bg);}
+.nav-link.active{background:var(--bg);color:var(--text);font-weight:500;}
+
+.container{max-width:1080px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* HERO */
+.page-eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;}
+.page-title{font-size:32px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px;}
+.page-sub{font-size:16px;color:var(--t2);margin-bottom:1.25rem;}
+.page-meta{font-size:13px;color:var(--t3);margin-bottom:1.5rem;}
+.template-note{background:var(--white);border:1px dashed var(--border);border-radius:var(--r);padding:1.1rem 1.4rem;font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:2.25rem;}
+.template-note strong{color:var(--text);}
+
+/* CONSTRAINTS ROW */
+.sec-label{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--t3);text-transform:uppercase;margin-bottom:14px;}
+.constraint-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:2.5rem;}
+.constraint-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem 1.3rem;}
+.constraint-card .k{font-size:13px;font-weight:700;letter-spacing:.04em;margin-bottom:6px;}
+.constraint-card.demand .k{color:var(--rai);}
+.constraint-card.supply .k{color:var(--lak);}
+.constraint-card.execution .k{color:var(--bpu);}
+.constraint-card .v{font-size:14px;color:var(--t2);}
+
+/* PHASE QUICK NAV */
+.phase-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:3rem;position:sticky;top:56px;background:var(--bg);padding:10px 0;z-index:50;}
+.phase-chip{display:flex;align-items:center;gap:7px;font-size:13px;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);text-decoration:none;color:var(--text);white-space:nowrap;}
+.phase-chip:hover{border-color:var(--t3);}
+.phase-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.dot-ok{background:var(--ok-b);}
+.dot-warn{background:var(--warn-b);}
+.dot-risk{background:#E06565;}
+
+/* PHASE SECTION */
+.phase-section{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:2rem 2.25rem;margin-bottom:1.75rem;scroll-margin-top:120px;}
+.phase-section.risk{border-left:4px solid #E06565;}
+.phase-section.warn{border-left:4px solid var(--warn-b);}
+.phase-section.ok{border-left:4px solid var(--ok-b);}
+.phase-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;flex-wrap:wrap;}
+.phase-title{font-size:21px;font-weight:700;}
+.phase-title small{display:block;font-size:13px;font-weight:400;color:var(--t3);margin-top:3px;}
+.status-pill{font-size:12px;font-weight:600;padding:5px 13px;border-radius:20px;white-space:nowrap;}
+.status-pill.ok{background:var(--ok-bg);color:var(--ok-c);border:1px solid var(--ok-b);}
+.status-pill.warn{background:var(--warn-bg);color:var(--warn-c);border:1px solid var(--warn-b);}
+.status-pill.risk{background:var(--risk-bg);color:var(--risk-c);border:1px solid var(--risk-b);}
+.phase-flavor{font-size:13px;color:var(--t3);font-style:italic;margin:6px 0 1.1rem;}
+
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.4rem;}
+.meta-item .lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:4px;}
+.meta-item .val{font-size:14.5px;color:var(--text);line-height:1.6;}
+
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.2rem;}
+.pain-box{border-radius:var(--rs);padding:1rem 1.15rem;font-size:14px;line-height:1.7;}
+.pain-box .lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;display:block;}
+.pain-known{background:#F1EFE8;color:var(--text);}
+.pain-known .lbl{color:var(--t2);}
+.pain-unknown{background:var(--warn-bg);color:var(--warn-c);}
+.pain-unknown .lbl{color:var(--warn-c);}
+
+.strategy-box{background:var(--lak-l);border:1px solid var(--lak-m);border-radius:var(--rs);padding:1rem 1.15rem;font-size:14px;color:#0E3D6E;line-height:1.7;margin-bottom:1.2rem;}
+.strategy-box .lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--lak);display:block;margin-bottom:6px;}
+
+/* DETAILS / DEEP DIVE */
+details{margin-top:.5rem;}
+summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--lak);padding:9px 0;list-style:none;display:flex;align-items:center;gap:6px;}
+summary::-webkit-details-marker{display:none;}
+summary::before{content:'▸';font-size:12px;transition:transform .15s;}
+details[open] summary::before{transform:rotate(90deg);}
+.prose{padding-top:.75rem;border-top:1px solid var(--border);margin-top:.4rem;}
+.prose h4{font-size:15px;font-weight:700;margin:1.4rem 0 .6rem;color:var(--text);}
+.prose h4:first-child{margin-top:0;}
+.prose p{font-size:14px;color:var(--t2);margin-bottom:.85rem;line-height:1.75;}
+.prose p strong{color:var(--text);}
+.prose ul,.prose ol{font-size:14px;color:var(--t2);margin:0 0 .9rem 1.3rem;line-height:1.75;}
+.prose li{margin-bottom:.35rem;}
+.prose .italic-note{font-style:italic;color:var(--t3);font-size:13.5px;border-left:2px solid var(--border);padding-left:12px;margin:1rem 0;}
+.note{border-radius:var(--rs);padding:.9rem 1.1rem;font-size:13.5px;line-height:1.7;margin:0 0 1rem;}
+.note-warn{background:var(--warn-bg);color:var(--warn-c);border:1px solid var(--warn-b);}
+.note-risk{background:var(--risk-bg);color:var(--risk-c);border:1px solid var(--risk-b);}
+.note-ok{background:var(--ok-bg);color:var(--ok-c);border:1px solid var(--ok-b);}
+.note strong{color:inherit;}
+
+table.dtable{width:100%;border-collapse:collapse;margin:0 0 1.2rem;font-size:13.5px;background:var(--white);}
+table.dtable th{background:var(--bg);padding:9px 12px;text-align:left;font-size:11.5px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border);}
+table.dtable td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:top;}
+table.dtable tr:last-child td{border-bottom:none;}
+
+/* SUMMARY / NEXT STEPS */
+.summary-section{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:2rem 2.25rem;margin-bottom:1.75rem;}
+.summary-section h2{font-size:19px;font-weight:700;margin-bottom:1rem;}
+.summary-list{list-style:none;counter-reset:s;}
+.summary-list li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:.9rem;font-size:14.5px;color:var(--t2);line-height:1.7;}
+.summary-list li::before{content:counter(s);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--rai-l);color:var(--rai);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.summary-list li strong{color:var(--text);}
+.todo-list{list-style:none;}
+.todo-list li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14.5px;color:var(--t2);}
+.todo-list li:last-child{border-bottom:none;}
+.todo-list li::before{content:'☐';color:var(--t3);flex-shrink:0;font-size:16px;line-height:1.4;}
+
+.footer{text-align:center;font-size:13px;color:var(--t3);padding:2rem 0 0;}
+
+@media (max-width:720px){
+  .constraint-grid,.pain-grid,.meta-grid{grid-template-columns:1fr;}
+  .page-title{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน <span>ปรับปรุงที่อยู่อาศัยกลุ่มเปราะบาง — R69-00219</span></div>
+  <div class="nav-links">
+    <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
+    <a href="dashboard_raiking.html" class="nav-link">ทม.ไร่ขิง</a>
+    <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+    <a href="journey_map.html" class="nav-link active">Journey Map</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="page-eyebrow">Pain Point Journey Map</div>
+  <div class="page-title">กระบวนการปรับปรุงบ้านกลุ่มเปราะบาง</div>
+  <div class="page-sub">ภาพรวม Flow กลาง ใช้ร่วมกัน 3 พื้นที่ (ไร่ขิง / หลักหก / บางปู)</div>
+  <div class="page-meta">โครงการ R69-00219 · สถาบันอาศรมศิลป์ · สสส. objective 4.3</div>
+
+  <div class="template-note">
+    เอกสารนี้เป็น <strong>"แม่แบบ"</strong> — ใช้เทียบกับแต่ละพื้นที่เพื่อดูว่าพื้นที่ไหนติดขัดตรง Phase ไหน<br><br>
+    ช่อง <strong>"Pain Point ที่อาจยังไม่รู้"</strong> เปิดไว้ตั้งใจ เพราะทีมงานเองก็อยู่ระหว่างเรียนรู้ — ไม่ใช่กรอกให้ครบ แต่เป็นคำถามที่ต้องเอาไปเช็คกับพื้นที่จริง
+  </div>
+
+  <div class="sec-label">กรอบใหญ่ 3 ข้อจำกัดเชิงระบบ (จากรายงานทบทวนนโยบาย)</div>
+  <p style="font-size:14px;color:var(--t2);margin-bottom:14px;">ทุก Phase ด้านล่างวิ่งอยู่ภายใต้ 3 ข้อจำกัดนี้ — เวลาเจอ pain point ใหม่ ให้ลองจัดเข้ากลุ่มใดกลุ่มหนึ่งก่อน</p>
+  <div class="constraint-grid">
+    <div class="constraint-card demand"><div class="k">DEMAND</div><div class="v">การรวบรวมความต้องการ + จัดลำดับความเร่งด่วนของคนที่ควรได้รับการปรับบ้าน</div></div>
+    <div class="constraint-card supply"><div class="k">SUPPLY</div><div class="v">การจัดการคน/ช่าง/วัสดุ/งบประมาณ ให้พร้อมตอบสนอง Demand</div></div>
+    <div class="constraint-card execution"><div class="k">EXECUTION</div><div class="v">การดำเนินงานจริงและการส่งมอบบริการ</div></div>
+  </div>
+
+  <div class="sec-label">ข้ามไปยัง Phase</div>
+  <div class="phase-nav">
+    <a href="#phase0" class="phase-chip"><span class="phase-dot dot-warn"></span>Phase 0 · Buy-in</a>
+    <a href="#phase1" class="phase-chip"><span class="phase-dot dot-warn"></span>Phase 1 · Demand</a>
+    <a href="#phase2" class="phase-chip"><span class="phase-dot dot-ok"></span>Phase 2 · ประเมินเชิงลึก</a>
+    <a href="#phase3" class="phase-chip"><span class="phase-dot dot-warn"></span>Phase 3 · ออกแบบ</a>
+    <a href="#phase4" class="phase-chip"><span class="phase-dot dot-risk"></span>Phase 4 · Supply</a>
+    <a href="#phase5" class="phase-chip"><span class="phase-dot dot-warn"></span>Phase 5 · Execution</a>
+    <a href="#phase6" class="phase-chip"><span class="phase-dot dot-risk"></span>Phase 6 · Sustainability</a>
+  </div>
+
+  <!-- ═══════════ PHASE 0 ═══════════ -->
+  <section id="phase0" class="phase-section warn">
+    <div class="phase-head">
+      <div class="phase-title">Phase 0 — การตัดสินใจเข้าร่วมและการมอบหมายผู้รับผิดชอบ<small>Buy-in &amp; Ownership</small></div>
+      <div class="status-pill warn">🟡 มีบางส่วน</div>
+    </div>
+    <div class="phase-flavor">Phase นี้เพิ่มเข้ามาใหม่ตามข้อสังเกตของทีม — เป็นจุดที่ "เทศบาลบางแห่งเลือกไม่ทำ" เกิดขึ้นจริง แต่ยังไม่เคยถูกแมปเป็น Phase อย่างเป็นทางการมาก่อน</div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">เทศบาล/อปท. จะ "รับเป็นเจ้าของ" กระบวนการนี้หรือไม่? ใครในเทศบาลจะเป็นผู้รับผิดชอบจริง?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">ผู้บริหาร อปท. (นายกฯ/ปลัด/รองนายกฯ), ทีมงานสตูดิโอ.ชุมชน, สสส. (ในฐานะผู้ให้ทุน)</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>งานยุ่งยาก ซับซ้อน ใช้เวลานาน ทำให้เทศบาลเลี่ยง · เจ้าหน้าที่มีภาระงานล้นมืออยู่แล้ว (พบจากกรณีอื่น) · ไม่มีธรรมเนียมทำงานข้ามหน่วยงาน (รพ.สต./อสม./ภาคเอกชน) มาก่อน</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>เทศบาลกลัวอะไรกันแน่? (กลัวรับผิดชอบทางกฎหมาย? กลัวงบไม่พอแล้วเสียหน้า? กลัวขัดกับหน่วยงานอื่น?) · มีประสบการณ์แย่จากโครงการอื่นที่คล้ายกันมาก่อนหรือไม่? · แรงจูงใจของ "คนเซ็นอนุมัติ" กับ "คนปฏิบัติจริง" ตรงกันไหม</div>
+    </div>
+
+    <div class="strategy-box"><span class="lbl">กลยุทธ์การสื่อสารที่ควรใช้</span>แสดงว่า "ปัญหาที่เขากลัวมีทางแก้แล้ว" เช่น กรณีไร่ขิงที่ทำสำเร็จ, มีทีมอาสา (สถาปนิก/นักศึกษา) ช่วยแบ่งเบาภาระ ไม่ใช่ให้เทศบาลทำเองทั้งหมด</div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+
+        <h4>สายการตัดสินใจ — ไม่ใช่เส้นตรงตายตัว ขึ้นอยู่กับ "ความสัมพันธ์เดิม" มากกว่าตำแหน่งในโครงสร้าง</h4>
+        <p><strong>กรณีมีความสัมพันธ์เดิมอยู่แล้ว (บางบัวทอง):</strong> แม้ทีมจะเริ่มทำงานกับ<strong>เจ้าหน้าที่ระดับปฏิบัติการ</strong>ก่อน แต่ ผอ.กอง / ปลัด / นายก <strong>เคยทำงานร่วมกับอาศรมศิลป์มาก่อนแล้ว</strong> — จึง<strong>ไม่จำเป็นต้องไต่บันไดทีละขั้นแบบเป็นทางการ</strong> ความไว้ใจที่มีอยู่แล้วช่วยย่นระยะเวลาได้มาก แม้จุดเริ่มต้นจะดูเหมือน "ล่างขึ้นบน"</p>
+        <p><strong>กรณีเริ่มความสัมพันธ์ใหม่ (ไม่มีประวัติร่วมงานมาก่อน):</strong> รูปแบบที่ใช้จริงคือ <strong>ทีมงาน (ภายนอก) เป็นผู้ขอโอกาสไต่ระดับด้วยตัวเอง</strong> ไม่ใช่ปล่อยให้เจ้าหน้าที่ไปโน้มน้าวหัวหน้าภายในตามลำพัง:</p>
+        <ol>
+          <li>เริ่มทำงานระดับชุมชน เจอเจ้าหน้าที่ที่สนใจ</li>
+          <li>ทีมงาน<strong>ขอโอกาสเข้าไปคุยกับ ผอ.กอง</strong> โดยตรง</li>
+          <li>ถ้า ผอ.กอง สนใจ → ทีมงาน<strong>ขอนำเสนอกับนายกฯ ด้วยตัวเอง</strong></li>
+        </ol>
+        <p><strong>นัยสำคัญที่แก้ไขจากเดิม:</strong> สิ่งที่กำหนดความเร็วของ Phase 0 จริงๆ <strong>ไม่ใช่ตำแหน่งในโครงสร้าง</strong> (บนลงล่าง/ล่างขึ้นบน) แต่แยกเป็น 2 ปัจจัยคนละแบบ — ความเร็วในการ <strong>"เริ่มต้น" (Initiation)</strong> กำหนดโดยวิสัยทัศน์ของผู้บริหาร (นายกหรือรองนายก) ที่เห็นประโยชน์ + ความไว้ใจสถาบันอาศรมศิลป์ (สั่งสมจากผลงานที่ผ่านมา) ไม่ใช่แค่ "มีความสัมพันธ์เดิม" เฉยๆ ส่วนความเร็วในการ <strong>"ดำเนินการ" (Implementation)</strong> กำหนดโดยความสนใจของเจ้าหน้าที่ระดับปฏิบัติการ — ในทางปฏิบัติยังไม่เคยเห็น ผอ.กอง ที่ Active จริงจังเลย แม้ตำแหน่งนี้น่าจะเป็นตัวเชื่อมสำคัญตามโครงสร้าง</p>
+        <div class="note note-warn">⚠️ <strong>ข้อยกเว้นที่ไร่ขิง (สัญญาณความเสี่ยงใหม่):</strong> ความเร็วในการดำเนินการมาจากความเอาจริงเอาจังของตัว<strong>รองนายกเอง</strong> ที่พยายามผลักดันเจ้าหน้าที่ให้ทำงาน (ซึ่งไม่สำเร็จนัก) — ต่างจากรูปแบบปกติที่ควรมาจากความสนใจของเจ้าหน้าที่เอง</div>
+        <p class="italic-note">นี่คือ<strong>key-person dependency ในอีกรูปแบบหนึ่ง</strong>ที่ยังไม่เคยถูกแมปมาก่อน — ไม่ใช่แค่ Key Connector (อาศรมศิลป์) หรือสถาปนิก/นักกายภาพอาสาที่พึ่งพาคนสำคัญ แต่ความต่อเนื่องของการดำเนินงานในไร่ขิงเองก็พึ่งพารองนายกคนเดียวอยู่ หากรองนายกเปลี่ยน (พ้นตำแหน่ง/หมดวาระ) และเจ้าหน้าที่ยังไม่ได้ถูกดึงเข้ามาอย่างแท้จริง ความเสี่ยงต่อความต่อเนื่องของโครงการที่ไร่ขิงเองอาจสูงกว่าที่เคยประเมินไว้</p>
+
+        <h4>งบ "พัฒนาศักยภาพผู้พิการ" ไม่ใช่กรณีเดียวกับการอนุมัติซ่อมบ้านรายหลัง</h4>
+        <p>ตัวอย่างบางบัวทอง (งบ "พัฒนาศักยภาพผู้พิการ" ~100,000 บาท/ปี ซึ่งมีอยู่แล้วทุกปี) <strong>ไม่ใช่</strong>กรณี "อนุมัติซ่อมบ้านหลังไหน" แต่เป็นเรื่อง<strong>การจัดสรรงบประจำปีที่มีอยู่แล้วให้ทำกิจกรรมรูปแบบใหม่</strong> (เปลี่ยนจากใช้อย่างอื่นมาเป็นจ้างนักกายภาพ):</p>
+        <ul>
+          <li>การเปลี่ยนรายละเอียดว่าจะจัดงบก้อนนี้แบบไหน เป็นสิทธิของเจ้าหน้าที่เอง</li>
+          <li>อาจต้องนำเสนอด้านบนเพื่ออนุมัติ — แต่ถ้าอยู่ในกรอบการดำเนินงานที่ทำได้อยู่แล้ว ไม่น่าจะถูกปฏิเสธ</li>
+        </ul>
+        <p>นี่เป็นเส้นทางที่มี<strong>แรงเสียดทานต่ำกว่ามาก</strong>เมื่อเทียบกับการขอ "งบใหม่" — อาจเป็นทางลัดที่คุ้มค่าที่สุดสำหรับพื้นที่ใหม่: เช็คว่าเทศบาลมีงบหมวดคล้ายกันอยู่แล้วหรือไม่ แล้วเสนอ "ปรับรายละเอียดการใช้" แทนที่จะขอ "งบใหม่"</p>
+        <div class="note note-warn">⚠️ <strong>ข้อควรระวัง (ยังไม่ยืนยันว่าใช้ได้ทั่วไป):</strong> ยังไม่แน่ใจว่า อปท. อื่นมีงบก้อนนี้เหมือนกันหรือไม่ — แม้ชื่อคล้ายกัน ขอบเขตการใช้จ่ายอาจต่างกันมาก ตัวอย่าง: ทต.หนองเสือ มี "งบพัฒนาศักยภาพผู้สูงอายุ" เช่นกัน แต่ระบุให้ใช้กับการพาผู้สูงอายุไปศึกษาดูงานเท่านั้น — ไม่ใช่งบที่ยืดหยุ่นสำหรับจ้างนักกายภาพหรือปรับบ้านแบบบางบัวทอง</div>
+        <p><strong>นัยสำคัญ:</strong> ชื่องบที่ฟังดูคล้ายกันไม่ได้แปลว่าใช้งานได้แบบเดียวกันทุกที่ — ต้องเช็คขอบเขตการใช้จ่ายที่ระบุไว้จริงของแต่ละ อปท. เป็นรายกรณี ก่อนเสนอแนวทางนี้กับพื้นที่ใหม่ (ไร่ขิง/หลักหก/บางปู)</p>
+
+        <h4>เรื่อง MOU — ไม่ใช่เงื่อนไข แต่ทำให้ใครอยากได้ก็ได้</h4>
+        <ul>
+          <li>MOU <strong>ไม่จำเป็นและไม่ใช่เงื่อนไข</strong>ในการเริ่มทำงาน</li>
+          <li>กรณีบางบัวทอง: เจ้าหน้าที่เป็นฝ่ายขอเซ็น MOU เอง — ทีมงานยินดีถ้าฝ่ายไหนต้องการ แต่ไม่บังคับ ถ้าทำงานได้โดยไม่มี MOU ก็ไม่เป็นไร</li>
+        </ul>
+
+        <h4>ความกังวลจริงของเจ้าหน้าที่ระดับปฏิบัติการ (แยกจากผู้บริหาร)</h4>
+        <p><strong>ผู้บริหาร:</strong> ส่วนใหญ่เห็นประโยชน์และสนใจอยู่แล้ว</p>
+        <p><strong>เจ้าหน้าที่ระดับปฏิบัติการ:</strong> กังวลว่าเป็น<strong>ภาระงานเพิ่ม</strong> โดยเฉพาะถ้าเคยลองทำมาก่อนแล้วรู้ว่ายาก (ทั้งเรื่องเอกสารและการจัดการงบประมาณ) — ยอมรับว่าปีแรกท้าทายจริงในแง่การรวบรวมข้อมูล/สร้างการมีส่วนร่วม</p>
+        <p><strong>รูปแบบที่พบบ่อย:</strong> ถ้าเจ้าหน้าที่อยากทำ ผู้บริหารมักสนับสนุนตาม — ทิศทางนี้ (staff-driven) ดูจะได้ผลมากกว่าทิศทางตรงข้าม (ผู้บริหารสั่งลงมาแต่เจ้าหน้าที่ไม่อิน)</p>
+
+        <h4>⚠️ Pain Point ใหม่: การจัดการความคาดหวังของเจ้าของบ้าน</h4>
+        <p>เจ้าหน้าที่กังวลเรื่องหนึ่งที่เป็นรูปธรรมมาก: <strong>การลงพื้นที่เยี่ยมบ้านเพื่อประเมิน</strong> อาจทำให้เจ้าของบ้านเข้าใจว่า "เทศบาลต้องมาปรับปรุงให้แน่นอน" — ถ้าระหว่างดำเนินการ (หรือสุดท้ายไม่มีงบจริง) เจ้าของบ้านจะคอยติดตามถาม หรือรู้สึกว่าเทศบาลมาดูแล้วไม่ช่วย จนกลายเป็นโกรธเทศบาล</p>
+        <p class="italic-note">นี่คือการปรากฏตัวจริงของความเสี่ยง "community expectation management" ที่เคยแมปไว้แล้วในการวิเคราะห์ MOU กับคณะสถาปัตยกรรมศาสตร์ — ตอนนี้เห็นชัดว่าเกิดขึ้นได้ตั้งแต่ขั้น Phase 0 / ก่อนเริ่มงานเลย ไม่ใช่แค่ตอนออกแบบ</p>
+        <div class="note note-ok"><strong>แนวทางที่เสนอ (มุมมองทีมงาน):</strong> เทศบาลมีสิทธิบอกตรงๆ ว่า "พยายามจะช่วย แต่รับประกันไม่ได้" — ถ้าสุดท้ายไม่ได้จริงๆ ก็อธิบายให้เข้าใจ ถ้าเขาไม่เข้าใจจริงๆ ก็ต้องปล่อยไป (ไม่ใช่ทุกเคสจะจบสวยงามได้)</div>
+
+        <h4>กรณีตัวอย่างจริงของการปฏิเสธ (Phase 0 Rejection Case)</h4>
+        <p><strong>เทศบาลเมืองบางศรีเมือง</strong> — ปฏิเสธไม่เข้าร่วม โดยให้เหตุผลว่า "ไม่มีกรณีผู้พิการด้านการเคลื่อนไหวที่ต้องการปรับปรุงบ้าน" ในพื้นที่</p>
+        <div class="note note-warn">⚠️ <strong>ข้อสังเกตสำคัญ:</strong> เชื่อว่าเหตุผลนี้มาจาก<strong>การไม่มีข้อมูลเชิงรุกในพื้นที่</strong> (ไม่ใช่เพราะไม่มีคนต้องการจริง) — และเทศบาลนี้ก็ไม่สนใจทำสำรวจเชิงรุกด้วย ทำให้เกิดวงจรปิด: ไม่สำรวจ → ไม่เห็นข้อมูล → สรุปว่าไม่มีความต้องการ → ไม่ต้องทำโครงการ</div>
+        <p class="italic-note">นี่คือหลักฐานที่ยืนยันสมมติฐานเดิมที่ตั้งไว้ตอนต้น: ปัญหา Phase 0 (ไม่เข้าร่วม) กับ Phase 1 (ไม่มีข้อมูลเชิงรุก) เป็นเรื่องเดียวกันได้จริง ไม่ใช่แค่ทฤษฎี</p>
+
+        <h4>ประเด็นที่ถามไปก่อนหน้า — ได้คำตอบแล้ว</h4>
+        <p><strong>"ความเป็นธรรมในการคัดเลือกบ้านเป็นความกังวลของเทศบาลก่อนตกลง Phase 0 หรือไม่?"</strong> → ไม่น่าจะใช่ ตามการประเมินของทีมงาน เพราะถ้าทำแบบเชิงรับ (ไม่แจ้งมาไม่ได้ซ่อม หรือเรียงคิวมาก่อนได้ก่อน) เทศบาลอธิบายได้ง่าย และผู้นำชุมชน/อสม. ก็ไม่ได้มีส่วนร่วมในการตัดสินใจเลือกอยู่แล้วในทางปฏิบัติจริง — ดังนั้นนี่ไม่ใช่ตัวแปรที่ทำให้เทศบาลลังเลตั้งแต่ต้น (ต่างจากที่ตั้งสมมติฐานไว้ก่อนหน้า)</p>
+
+        <h4>อัปเดตสถานะรายพื้นที่ (จากบทสนทนาล่าสุด)</h4>
+        <p><strong>ไร่ขิง — Timeline ของ Buy-in:</strong> ก่อนเข้าสู่ 2 ปีปัจจุบัน มีช่วงเริ่มสนใจมาก่อนแล้วอีกประมาณ 2 ปี (รวมแล้ว buy-in ใช้เวลาหลายปีกว่าจะมาถึงจุดนี้) — จุดเปลี่ยน (turning point) คือ<strong>เห็นผลงานจริงจากแบบที่สถาปนิกทำ</strong> และเห็นว่าช่วยกลุ่มเปราะบางได้จริง ไม่ใช่แค่การอธิบายเชิงหลักการ ("seeing is believing" มากกว่า "telling")</p>
+        <p><strong>หลักหก — การเปลี่ยนแปลงสำคัญ:</strong> ⚠️ คุณแตน (Key Connector เดิม) ลาออกจาก รพ.สต. แล้ว ผู้ที่อาจสืบทอดบทบาท: "คุณโป้ง" (พยาบาล) ซึ่งดูสนใจงานนี้ — แต่ยังไม่ได้คุยรายละเอียด</p>
+        <p class="italic-note">นี่คือการปรากฏตัวจริงของความเสี่ยง "Key Connector ต้อง transfer" ที่เคยแมปไว้ใน Phase 6 (Sustainability) — เกิดขึ้นเร็วกว่าที่คาดในสายสัมพันธ์ระดับปฏิบัติการ ไม่ใช่แค่ระดับผู้บริหาร</p>
+        <p><strong>บางปู:</strong> เรื่องงบรัฐมีสนับสนุนอยู่แล้ว ความลังเล (ถ้ามี) น่าจะมาจาก 2 สาเหตุหลัก: (ก) ไม่เคยทำ + จินตนาการว่ายุ่งยากกว่าที่เคยทำงาน หรือ (ข) เคยทำแล้วรู้ว่ายาก จึงไม่สนใจอีก — ยังไม่ระบุว่าบางปูเข้าข่ายแบบไหน ต้องเช็คต่อ</p>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 1 ═══════════ -->
+  <section id="phase1" class="phase-section warn">
+    <div class="phase-head">
+      <div class="phase-title">Phase 1 — รวบรวมความต้องการและจัดลำดับความเร่งด่วน<small>Demand</small></div>
+      <div class="status-pill warn">🟡 มีหลายช่องทาง แต่ไม่ครอบคลุม 100%</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">ใครในพื้นที่ที่ควรได้รับการปรับบ้านก่อน? ใช้เกณฑ์อะไรตัดสิน?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">อสม., รพ.สต., อปท. (กองสวัสดิการ / กองสาธารณสุข), แกนนำชุมชน, สภาองค์กรชุมชน (พอช.)</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>ข้อมูลความต้องการกระจัดกระจาย ไม่มีระบบจัดลำดับความเร่งด่วนที่ชัดเจน (ระบุในรายงานนโยบายทบทวน) — เมื่อลงรายละเอียดพบว่าสาเหตุคือ<strong>ฐานข้อมูลแยกกันอยู่คนละฝ่าย</strong> ไม่ใช่แค่ "ไม่มีระบบ"</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>อสม./รพ.สต. มีเกณฑ์จัดลำดับความเร่งด่วนของตัวเองอยู่แล้วหรือไม่ ตรงกับเกณฑ์ "ปัญหาด้านการเคลื่อนไหว" ของโครงการนี้ไหม? · พื้นที่ที่สภาองค์กรชุมชนไม่เข้มแข็ง กลุ่มเป้าหมายจะหลุดจากทุกช่องทางไปเลยหรือไม่? · ช่องทางกองสาธารณสุขฯ ใช้ได้จริงหรือไม่ในไร่ขิง/หลักหก/บางปู — ยังไม่เคยทดลอง</div>
+    </div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+
+        <h4>แผนที่ฐานข้อมูล (Data Landscape) — ทำไมข้อมูลถึงกระจัดกระจาย</h4>
+        <p><strong>ฐานข้อมูลที่ 1: กองสวัสดิการ อปท.</strong> — มีข้อมูลผู้สูงอายุ + ผู้พิการ "ทุกคนที่ลงทะเบียนแล้ว" เท่านั้น เงื่อนไข: (1) ย้ายทะเบียนบ้านมาอยู่ในพื้นที่แล้ว และ (2) ลงทะเบียนผู้พิการกับ อปท. แล้ว — <strong>จุดบอด:</strong> คนที่อาศัยอยู่จริงแต่ไม่ได้ย้ายทะเบียนบ้าน หรือยังไม่ได้ลงทะเบียนผู้พิการ ไม่มีข้อมูลในระบบนี้เลย ในเทศบาลขนาดใหญ่ (เช่น เทศบาลนครบางบัวทอง — ตัวอย่างเปรียบเทียบ ไม่ใช่หนึ่งใน 3 พื้นที่โครงการ) งานผู้สูงอายุกับงานกลุ่มเปราะบางอาจแยกคนละคนดูแล แม้จะอยู่กองเดียวกัน</p>
+        <p><strong>ฐานข้อมูลที่ 2: อสม. / รพ.สต.</strong> — มีข้อมูลละเอียดและครอบคลุมมากที่สุด เพราะลงพื้นที่จริงในระดับชุมชน เป็นคนละหน่วยงานกับกองสวัสดิการ อปท. ข้อมูลไม่ได้เชื่อมกันอัตโนมัติ</p>
+        <div class="note note-ok">✅ <strong>ยืนยันโครงสร้างจากการสืบค้น:</strong> อสม./รพ.สต. อยู่ในสายกระทรวงสาธารณสุขทั้งหมด ไม่ได้สังกัด อปท. — รพ.สต. ใช้ระบบ HOSxP_PCU ส่งข้อมูลมาตรฐาน "43 แฟ้ม" เข้า <strong>HDC (Health Data Center)</strong> ซึ่งเป็นฐานข้อมูลระดับประเทศของกระทรวงสาธารณสุข; อสม. มีระบบทะเบียน/ติดตามของตัวเองคือ "ระบบสารสนเทศงานสุขภาพภาคประชาชน" ดูแลโดยกรมสนับสนุนบริการสุขภาพ ส่วน<strong>กองสาธารณสุขฯ ของ อปท.</strong> เป็นฐานข้อมูลแยกต่างหาก ไม่เชื่อมกับ HDC — ทำงานร่วมกับ อสม. ได้ในทางปฏิบัติ แต่ไม่ได้กำกับดูแล อสม. โดยโครงสร้าง และไม่ได้ใช้ฐานข้อมูลเดียวกันกับ รพ.สต.</div>
+        <p>ความครอบคลุมของข้อมูลชุดนี้<strong>ขึ้นอยู่กับความขยัน/ความละเอียดของแกนนำและ อสม. แต่ละคน</strong> ไม่ใช่ระบบที่รับประกันความครบถ้วน — ตัวอย่าง ทต.หลักหก: แม้ รพ.สต. จะเข้าร่วมประชุม อสม. อย่างเข้มแข็ง แต่ก็ยังตกสำรวจผู้สูงอายุ/กลุ่มเปราะบางบางส่วนอยู่ดี</p>
+        <p><strong>ฐานข้อมูลที่ 3: สภาองค์กรชุมชน (สนับสนุนโดย พอช.)</strong> — สำรวจกลุ่มเป้าหมายคนละมิติ: "ผู้มีรายได้น้อย + สภาพที่อยู่อาศัยทรุดโทรม" (ไม่ได้ตั้งต้นจากอายุ/ความพิการ) ทำงานผ่านโครงการ "บ้านพอเพียง" — เสนอผ่าน อปท. เพื่อขอพิจารณางบจาก พมจ. กลุ่มเป้าหมาย overlap บางส่วนกับผู้สูงอายุ/กลุ่มเปราะบางของโครงการนี้ ใช้เป็นแหล่งคัดกรองเพิ่มได้ แต่ไม่ใช่ฐานข้อมูลหลัก</p>
+        <table class="dtable">
+          <tr><th>พื้นที่</th><th>สถานะสภาองค์กรชุมชน</th><th>หมายเหตุ</th></tr>
+          <tr><td>ไร่ขิง</td><td>✅ ยืนยันมี ทำงานอยู่จริง</td><td>พบกิจกรรมพัฒนาคุณภาพชีวิตผู้มีรายได้น้อยเมื่อปี 2565 (คณะทำงานนำโดยนายสมยศ รัชตผดุง)</td></tr>
+          <tr><td>หลักหก</td><td>🟡 มี แต่ยังไม่ลงรายละเอียด</td><td>ผู้ใช้ยืนยันว่ามี แต่ยังไม่เคยคุยเรื่องการทำงานจริง</td></tr>
+          <tr><td>บางปู</td><td>⚪ ยังไม่ยืนยัน</td><td>ค้นเว็บไม่พบร่องรอยชัดเจน — ต้องเช็คจากทำเนียบสภาองค์กรชุมชนตำบลของ พอช. (gdcatalog.codi.or.th) หรือถาม พมจ.สมุทรปราการ/พอช.ภาคโดยตรง</td></tr>
+        </table>
+        <p><strong>ตัวกรองสุดท้าย:</strong> ทั้ง 3 ฐานข้อมูลข้างต้นคือ "รายชื่อผู้สูงอายุ/กลุ่มเปราะบาง/คนจนบ้านทรุดโทรม" ในภาพกว้าง แต่การปรับปรุงบ้านที่ให้ประโยชน์สูงสุดจริงๆ คือกลุ่มที่<strong>มีปัญหาด้านการเคลื่อนไหวเป็นหลัก</strong> ซึ่งเป็นแค่ "ส่วนหนึ่ง" ของข้อมูลทั้งหมดนี้อีกที — จึงต้องมีการคัดกรองซ้ำหลังจากรวบรวมรายชื่อมาแล้ว</p>
+
+        <h4>4 (+1) ช่องทางที่มาของกลุ่มเป้าหมาย</h4>
+        <table class="dtable">
+          <tr><th>#</th><th>ช่องทาง</th><th>จุดเริ่มต้น</th><th>ข้อจำกัด</th></tr>
+          <tr><td>1</td><td>แกนนำชุมชน/อสม. สำรวจเอง</td><td>ลงพื้นที่สำรวจให้ครบ 100% เท่าที่แกนนำทำได้ในระดับชุมชน แล้วขอความช่วยเหลือต่อจาก รพ.สต. และ อปท.</td><td>ครอบคลุมแค่ไหนขึ้นกับความขยันของแกนนำแต่ละคน/พื้นที่</td></tr>
+          <tr><td>2</td><td>เริ่มจากข้อมูล รพ.สต.</td><td>รพ.สต. มีข้อมูลกลุ่มนี้อยู่แล้วบางส่วน → ขอให้ รพ.สต. เป็นเจ้าภาพชวน อสม. มาร่วมสำรวจต่อ</td><td>ต้อง รพ.สต. เต็มใจเป็นเจ้าภาพก่อน</td></tr>
+          <tr><td>3</td><td>ขอข้อมูลจากสภาองค์กรชุมชน</td><td>ขอรายชื่อกลุ่มเป้าหมายยากจน/บ้านทรุดโทรม แล้วคัดกรองเฉพาะที่เป็นผู้สูงอายุ/ผู้พิการ</td><td>ใช้ได้เฉพาะพื้นที่ที่สภาองค์กรชุมชนทำงานเข้มแข็ง</td></tr>
+          <tr><td>4</td><td>เริ่มจากฝ่ายสวัสดิการ อปท.</td><td>อปท. ได้รับการร้องเรียนจาก อสม./แกนนำ ให้ช่วยปรับบ้าน บางกรณีเจ้าหน้าที่ลงสำรวจเอง</td><td>ไม่ครอบคลุม ขึ้นกับว่าแกนนำ/อสม. เสนอเรื่องมาหรือไม่ (passive, รอเรื่องเข้า)</td></tr>
+          <tr><td>5</td><td>[ยังไม่เคยลอง] เริ่มจากกองสาธารณสุขฯ อปท.</td><td>ทำงานร่วมกับ อสม. ได้ในทางปฏิบัติ อาจให้มุมมองพื้นที่อีกชุดที่ไม่ทับซ้อนกับข้อมูล รพ.สต. เดิมทั้งหมด</td><td>เป็นฐานข้อมูลคนละชุดกับ HDC — ไม่ใช่ทางลัดเข้าถึงข้อมูลเดียวกัน แต่เป็น "อีกมุมมอง" ต้องทดลองในพื้นที่จริง</td></tr>
+        </table>
+        <p><strong>ข้อสังเกต:</strong> 4 ช่องทางแรกไม่มีช่องทางไหนที่ตั้งต้นจาก "ระบบกลาง" ที่ครอบคลุมทั้งพื้นที่ได้ในตัวเอง — ทุกช่องทางพึ่งพาความร่วมมือแบบ ad-hoc ระหว่างหน่วยงาน ซึ่งอาจเป็นสาเหตุหนึ่งที่ทำให้ Phase 0 (Buy-in) ยากสำหรับเทศบาลบางแห่ง เพราะมองไม่เห็น "ระบบที่ชัดเจน" ตั้งแต่ต้น มีแต่ "กระบวนการที่ต้องประสานเอง"</p>
+
+        <h4>⚠️ ระบบคัดกรองและจัดลำดับความสำคัญ — ความเสี่ยงเรื่องความเป็นธรรม</h4>
+        <p>หลังจากรวบรวมรายชื่อกลุ่มเป้าหมายมาแล้ว ยังมีปัญหาอีกชั้นหนึ่งคือ "ใครควรได้ก่อน" — แต่ละเส้นทางงบใช้เกณฑ์ต่างกัน และมีความเสี่ยงต่างกัน:</p>
+        <p><strong>เส้นทางบ้านพอเพียง (สภาองค์กรชุมชน):</strong> ใช้กรอบ "ความจำเป็น + ความยากลำบาก" พิจารณาโดยคณะกรรมการ</p>
+        <div class="note note-warn">⚠️ ดุลพินิจของคณะกรรมการในบางกรณีอาจไม่สมเหตุสมผลนัก (สังเกตได้จากบางกรณีในไร่ขิง) — มีความเสี่ยงเรื่อง<strong>ระบบพวกพ้อง</strong>ได้ เพราะไม่มีเกณฑ์เชิงปริมาณที่ตรวจสอบย้อนกลับได้ชัดเจน</div>
+        <p><strong>เส้นทางเทศบาล (งบ อปท./พมจ. ทั่วไป):</strong> บางพื้นที่ใช้ระบบ "มาก่อนได้ก่อน" ควบคู่กับดุลพินิจ บางพื้นที่พิจารณาเฉพาะในกลุ่มผู้ที่มาขอรับความช่วยเหลือเท่านั้น</p>
+        <div class="note note-risk">⚠️ <strong>ความเสี่ยงเชิงระบบที่สำคัญ:</strong> ทั้งสองแบบเป็นระบบเชิงรับ (passive) — คนที่ยากลำบากจริงแต่<strong>ไม่มีตัวแทน</strong> (ผู้นำชุมชน/อสม.) มาร้องขอแทน หรือไม่ได้ร้องขอด้วยตัวเอง จะไม่ได้รับการช่วยเหลือเลย แม้จะสมควรได้รับมากที่สุดก็ตาม — นี่ไม่ใช่ปัญหาระดับปัจเจก แต่เป็นช่องโหว่เชิงระบบที่ทำให้กลุ่มเปราะบางที่สุด (ซึ่งมักไม่มีเครือข่ายทางสังคมด้วย) ถูกทิ้งไว้ข้างหลังซ้ำซ้อน</div>
+        <p><strong>โมเดลในอดีตที่เคยใช้:</strong> โครงการเคยใช้วิธีสำรวจ+คัดกรองแบบมีส่วนร่วมของคนในชุมชน เพื่อจัดลำดับความสำคัญและความต้องการ — ทำไปพร้อมกับความต้องการด้านอื่นๆ ของชุมชน ไม่ใช่แค่เรื่องบ้านอย่างเดียว</p>
+        <p><strong>ทิศทางที่อยากผลักดัน (ระยะยาว):</strong> ผลักดันให้ อปท. มีระบบคัดกรองแบบมีส่วนร่วม เช่น ใช้<strong>เวทีประชาคมของเทศบาลเมืองไร่ขิง</strong> (ซึ่งมีกลไกนี้อยู่แล้ว) เป็นพื้นที่พิจารณาลำดับความจำเป็นเรื่องปรับบ้านด้วย</p>
+        <p><strong>กลยุทธ์ปีแรก (interim):</strong> พิจารณาจากข้อมูลที่มีอยู่ก่อน แต่สื่อสารให้แกนนำชุมชน/อสม. เห็นชัดว่า ถ้าพวกเขาช่วยหาข้อมูลกลุ่มเปราะบางที่จำเป็นจริงมาเสนอ อปท. จะพิจารณาด้วยเกณฑ์นี้และช่วยเหลือได้จริง — สร้างแรงจูงใจเชิงบวกให้แกนนำ/อสม. ลงพื้นที่สำรวจเชิงรุกมากขึ้น</p>
+        <p><strong>คำถามที่ควรถามในการสัมภาษณ์รอบถัดไป:</strong> ไร่ขิง/หลักหก/บางปู แต่ละที่ใช้เกณฑ์ไหนในทางปฏิบัติจริง? เคยมีเคสที่ "ตกหล่น" เพราะไม่มีตัวแทนมาร้องขอหรือไม่? เวทีประชาคมของไร่ขิงจัดถี่แค่ไหน และมีช่องให้หยิบยกประเด็นนี้ได้จริงหรือไม่?</p>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 2 ═══════════ -->
+  <section id="phase2" class="phase-section ok">
+    <div class="phase-head">
+      <div class="phase-title">Phase 2 — ลงพื้นที่ประเมินสภาพและความต้องการเชิงลึก</div>
+      <div class="status-pill ok">🟢 มีกระบวนการชัดเจนแล้ว</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">สภาพร่างกาย พฤติกรรมการใช้ชีวิต และข้อจำกัดทางกายภาพของบ้านแต่ละหลังเป็นอย่างไร?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">นักศึกษากายภาพบำบัด ม.มหิดล ("มอเฮม"), นักศึกษา รพ.สต. บางกรณี</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>เป็นงานภาคสนามที่ใช้เวลา — ข้อมูลบางส่วนยังเป็น "ผลงานเบื้องต้นของนักศึกษา" ที่ต้องการมืออาชีพมาตรวจสอบซ้ำ</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>นักศึกษาหมุนเวียนทุกเทอม — ความรู้ที่สะสมไว้ transfer ไปยังรุ่นถัดไปได้ดีแค่ไหน?</div>
+    </div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+        <h4>⚠️ การขาดแคลนนักกายภาพบำบัดในระบบ อปท./รพ.สต.</h4>
+        <p><strong>ปัญหาเชิงโครงสร้าง:</strong> อปท. ไม่มีนักกายภาพบำบัดในสังกัด และ รพ.สต. ก็มักไม่มีเช่นกัน — นักกายภาพบำบัดส่วนใหญ่อยู่ที่ระดับ<strong>โรงพยาบาลประจำอำเภอ</strong> (ถ้ามี) เท่านั้น ทำให้ไม่มีใครในระบบท้องถิ่นที่มีความรู้เฉพาะทางมาประเมินความจำเป็นด้านการเคลื่อนไหวได้โดยตรง</p>
+        <table class="dtable">
+          <tr><th>พื้นที่</th><th>โมเดล</th><th>รายละเอียด</th></tr>
+          <tr><td>ไร่ขิง / หลักหก</td><td>อาจารย์คณะกายภาพบำบัดจากมหาวิทยาลัย</td><td>ม.มหิดล (ไร่ขิง) / ม.รังสิต (หลักหก) — นักศึกษาลงพื้นที่เป็นส่วนหนึ่งของการเรียน</td></tr>
+          <tr><td>บางบัวทอง (นอกโครงการ — ใช้เป็น reference)</td><td>จ้างนักกายภาพบำบัดเอกชน</td><td>เป็นงบของ อปท. เอง ภายใต้ชื่อโครงการ "พัฒนาศักยภาพผู้พิการ" ซึ่งมีงบหมวดนี้ทุกปี แต่ที่ผ่านมาใช้เงินไปกับกิจกรรมอื่น — ปีนี้เป็นปีแรกที่เจ้าหน้าที่เสนอให้ทำในลักษณะนี้ ผู้นำชุมชนเป็นผู้เสนอกลุ่มเปราะบางเป้าหมาย</td></tr>
+        </table>
+        <p><strong>ข้อสังเกตสำคัญจากทีมงาน:</strong> ไม่เคยได้ยินที่ไหนทำแบบบางบัวทองมาก่อน — เท่าที่เคยได้ยิน มีแต่การจ้างนักกายภาพลงไปช่วยเป็นรายกรณี แต่ไม่เคยนำไปสู่การปรับปรุงบ้านจริง — บางบัวทองอาจเป็นโมเดลแรกที่เชื่อมงานกายภาพบำบัดเข้ากับการปรับบ้านโดยตรงผ่านงบ อปท. เอง <strong>สถานะบางปู:</strong> ยังไม่แน่ใจว่าจะได้นักกายภาพบำบัดจากที่ไหน — ยังเป็นช่องว่างเปิดอยู่ (ต่างจากไร่ขิง/หลักหกที่มีมหาวิทยาลัยพันธมิตรแล้ว)</p>
+        <p><strong>คำถามที่ควรติดตาม:</strong> โมเดลบางบัวทอง (จ้างเอกชนผ่านงบ "พัฒนาศักยภาพผู้พิการ") ใช้ได้ผลจริงหรือไม่ ควรรอดูผลก่อนเสนอให้บางปูลองทำตามหรือไม่? ถ้าบางปูไม่มีมหาวิทยาลัยพันธมิตรด้านกายภาพบำบัด โมเดล "จ้างเอกชนผ่านงบ อปท. เอง" อาจเป็นทางเลือกที่ปรับใช้ได้ — ควรเช็คว่าเทศบาลบางปูมีงบหมวดคล้ายกับ "พัฒนาศักยภาพผู้พิการ" ของบางบัวทองหรือไม่</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 3 ═══════════ -->
+  <section id="phase3" class="phase-section warn">
+    <div class="phase-head">
+      <div class="phase-title">Phase 3 — ออกแบบทางเลือกการปรับปรุง<small>Design</small></div>
+      <div class="status-pill warn">🟡 มีทีมแล้ว แต่พึ่งพา key person สูง</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">ออกแบบอย่างไรให้สอดคล้องกับโครงสร้างเดิม + งบประมาณที่มี + ความต้องการเฉพาะบุคคล?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">สถาปนิกอาสา (อาศรมศิลป์), นักศึกษาสถาปัตย์ มทร.รัตนโกสินทร์ ("Aj. Li"), วิศวกรอาสา</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>ขาดแบบก่อสร้างที่ใช้สื่อสารกับช่างได้จริง; ต้องแก้แบบหลายรอบเพราะข้อจำกัดงบ/โครงสร้าง (ระบุในรายงาน RISE IMPACT)</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>เรื่อง IP ของแบบที่นักศึกษา/สถาปนิกอาสาออกแบบ — ใครเป็นเจ้าของ ใครรับผิดชอบทางวิชาชีพถ้ามีปัญหาเชิงโครงสร้างภายหลัง (ประเด็นที่แมปไว้ใน MOU แล้ว แต่ยังไม่ทดสอบกับสถานการณ์จริง)</div>
+    </div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+        <h4>⚠️ การขาดสถาปนิกที่ทำงานนี้จริงใน อปท.</h4>
+        <p><strong>ปัญหาเชิงโครงสร้าง:</strong> อปท. อาจมีสถาปนิกอยู่ในกองช่างโยธาอยู่แล้ว แต่ในทางปฏิบัติมักไม่ทำงานปรับบ้านกลุ่มเปราะบางนี้ เพราะ (1) มีภาระงานประจำอื่นอยู่แล้วเต็มมือ และ (2) แม้จะรับทำ ก็อาจไม่มีความรู้เฉพาะทาง Universal Design เพียงพอ</p>
+        <p><strong>วิธีแก้ที่ใช้อยู่ปัจจุบัน:</strong> พึ่งพาสถาปนิกอาสาที่ทีมงานเป็นผู้เชื่อมโยงหา — บนสมมติฐานว่าสถาปนิกทั่วไปอยากทำประโยชน์ทางสังคม บทบาทของทีมงานคือคัดกรองกลุ่มผู้ต้องการ+เตรียมข้อมูล (รวมเรื่องเล่าของแต่ละกรณี) เพื่อนำไปสื่อสารหาสถาปนิกอาสา — เป้าหมายคือถ้าได้สถาปนิกในพื้นที่จะช่วยให้เกิดการช่วยเหลือต่อเนื่องระยะยาว</p>
+        <table class="dtable">
+          <tr><th>พื้นที่</th><th>สถาปนิกอาสา/พันธมิตร</th></tr>
+          <tr><td>ไร่ขิง</td><td>มทร.รัตนโกสินทร์ ("Aj. Li")</td></tr>
+          <tr><td>หลักหก</td><td>(ใช้โมเดลเดียวกับไร่ขิงหรือกำลังหา — ยังไม่ระบุชัดในบทสนทนาที่ผ่านมา)</td></tr>
+          <tr><td>บางปู</td><td>กำลังเล็งคณะสถาปัตยกรรมศาสตร์ ม.ลาดกระบัง เป็นพันธมิตรใหม่</td></tr>
+        </table>
+        <p class="italic-note">นี่คือรูปแบบ key-person/volunteer dependency เดียวกับที่เคยระบุไว้ในการวิเคราะห์ MOU กับคณะสถาปัตยกรรมศาสตร์ (ความเสี่ยงด้าน IP ความรับผิดชอบทางวิชาชีพ การพึ่งพา key person) — การขยายไปยัง ม.ลาดกระบังที่บางปู จึงควรนำบทเรียนจาก MOU เดิม (5 ประโยชน์ + 5 ความเสี่ยง) มาใช้ตั้งแต่ต้น ไม่ใช่เริ่มคุยจากศูนย์</p>
+        <p><strong>คำถามที่ควรติดตาม:</strong> ม.ลาดกระบังตอบรับหรือยัง อยู่ในขั้นตอนไหนของการเจรจา? หลักหกมีสถาปนิกอาสา/พันธมิตรวิชาการด้านสถาปัตย์หรือไม่ — เป็นช่องว่างข้อมูลที่ควรเติมให้ครบ</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 4 ═══════════ -->
+  <section id="phase4" class="phase-section risk">
+    <div class="phase-head">
+      <div class="phase-title">Phase 4 — จัดหาทรัพยากร: คน/ช่าง/วัสดุ/งบประมาณ<small>Supply</small></div>
+      <div class="status-pill risk">🔴 จุดเปราะที่สุดของทั้งกระบวนการ</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">มีช่างที่เข้าใจ Universal Design ไหม? งบพอไหม? ใครจ่าย?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">เทศบาล (สำรอง/ประสานงบ), ช่างท้องถิ่น, พมจ./พอช./อบจ./กองสลาก (แหล่งงบ)</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>ขาดแคลนช่างที่มีความรู้เรื่อง Universal Design; เพดานงบประมาณไม่พอค่าแรง+วัสดุ (ระบุชัดในรายงานนโยบาย)</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>ลำดับการจ่ายเงินจริงของเส้นทาง พมจ. (อปท.จ่ายก่อนแล้วเบิกคืน หรือ พมจ.โอนเงินมาให้ก่อนเริ่มงาน)? ทำไมเทศบาลไม่นิยมใช้เส้นทางงบ อปท. เองทั้งที่น่าจะเร็วกว่า?</div>
+    </div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+
+        <h4>เส้นทางเงิน — ทำไมทุกเส้นทางต้องผ่าน อปท.</h4>
+        <table class="dtable">
+          <tr><th>แหล่งงบ</th><th>หน่วยงานต้นทาง</th><th>เส้นทางผ่าน อปท.</th></tr>
+          <tr><td>โครงการบ้านพอเพียง</td><td>พอช. (ภายใต้ พม.)</td><td>ผ่านสภาองค์กรชุมชนเป็นผู้ดำเนินการหลัก — อปท. เป็นแค่ทางผ่านของเงิน</td></tr>
+          <tr><td>โครงการปรับปรุงบ้านผู้สูงอายุ/คนพิการ</td><td>พม. (ผ่าน พมจ.)</td><td>อปท. ต้องสำรวจ+ประเมินราคา+ดำเนินการเอง</td></tr>
+          <tr><td>กองทุนฟื้นฟูฯ</td><td>อบจ.</td><td>ผ่าน อปท.</td></tr>
+          <tr><td>งบกองสลาก</td><td>สำนักงานสลากกินแบ่งฯ</td><td>ผ่าน อปท.</td></tr>
+        </table>
+        <p><strong>เส้นทางบ้านพอเพียง (พอช.):</strong> อปท. รับภาระน้อย เพราะสภาองค์กรชุมชนเป็นเจ้าภาพดำเนินการ อปท. ทำหน้าที่แค่ทางผ่านเงิน</p>
+        <p><strong>เส้นทางงบ พมจ.:</strong> อปท. รับภาระมากกว่า และมีขั้นตอนที่ยืนยันแล้วจากการสืบค้นว่าสร้างช่องว่างเวลา:</p>
+        <ol>
+          <li>อปท. สำรวจข้อมูลผู้สูงอายุที่ต้องการซ่อมบ้าน</li>
+          <li>อปท. ส่งประมาณการค่าวัสดุ+เอกสารไปที่ พมจ.</li>
+          <li>พมจ. ลงพื้นที่เยี่ยมบ้านตรวจสอบข้อเท็จจริงซ้ำอีกรอบ</li>
+          <li>พมจ. นำเข้าที่ประชุมคณะกรรมการเพื่อจัดลำดับความสำคัญ</li>
+          <li>อนุมัติ → ส่งกลับให้ อปท. เป็นหน่วยดำเนินการ</li>
+        </ol>
+        <p style="font-size:12.5px;color:var(--t3);">ยืนยันตรงกันจาก <a href="https://www.thairath.co.th/news/local/2790452" target="_blank" rel="noopener">Thairath</a>, <a href="https://www.pptvhd36.com/news/%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1/224970" target="_blank" rel="noopener">PPTVHD36</a>, <a href="https://www.thansettakij.com/news/general-news/597271" target="_blank" rel="noopener">Thansettakij</a></p>
+        <p><strong>นัยสำคัญ:</strong> ขั้นตอน 5 ก้าวนี้ (โดยเฉพาะข้อ 3-4 ที่ตรวจสอบซ้ำ+รอประชุมกรรมการ) รองรับสมมติฐานเรื่อง "ราคาวัสดุขึ้นระหว่างรออนุมัติ" ได้อย่างมีเหตุผลเชิงโครงสร้าง แม้จะไม่มีตัวเลขระยะเวลาที่แน่นอนก็ตาม</p>
+        <div class="note note-info" style="background:var(--bg);color:var(--t2);border:1px solid var(--border);">กรมบัญชีกลางเคยออกหนังสือด่วนที่สุด (ก.ค. 2568) เรื่อง "แนวทางกรณีเงินงบประมาณของ อปท. ไม่เพียงพอต่อการเบิกจ่ายเบี้ยยังชีพผู้สูงอายุ-เบี้ยความพิการ" — ยืนยันว่าปัญหา "อปท. งบไม่พอ/ต้องรอเงินจากส่วนกลาง" เป็นปัญหาระดับนโยบายที่รัฐบาลกลางต้องออกแนวปฏิบัติรองรับจริง ไม่ใช่แค่กรณีเดี่ยว (<a href="https://www.thecoverage.info/news/content/9288" target="_blank" rel="noopener">TheCoverage.info</a>)</div>
+
+        <h4>⚠️ ส่วนที่ยังไม่ยืนยัน — ต้องเช็คกับพื้นที่โดยตรง</h4>
+        <p>ทีมงานเข้าใจว่าในทางปฏิบัติ นายก/รองนายก อปท. อาจสำรองเงินส่วนตัวออกไปดำเนินการก่อน แล้วค่อยนำเงินจาก พมจ. มาคืนภายหลัง เนื่องจาก (ตามความเข้าใจ) อปท. ไม่สามารถใช้เงินสะสม/เงินทดรองราชการของตัวเองในโครงการที่รองบจากหน่วยงานอื่นได้โดยตรง — สืบค้นเว็บ+โซเชียลมีเดียแล้ว ไม่พบข่าวหรือโพสต์ที่ยืนยันเรื่องนี้โดยตรง เข้าใจได้ว่าเป็นแนวปฏิบัตินอกระบบที่ไม่น่าถูกรายงานเป็นข่าว <strong>สถานะ:</strong> ข้อมูลวงในจากประสบการณ์ภาคสนามของทีม — ยังไม่ควรใช้อ้างอิงในเอกสารเผยแพร่ภายนอกจนกว่าจะยืนยันตรงกับพื้นที่</p>
+        <p><strong>คำถามที่ควรถาม (เช่น กับ สท.อ๊อด):</strong> "เวลาที่รองบ พมจ. เคยต้องสำรองเงินไปก่อนไหม? สำรองแบบไหน? เคยเจอปัญหาราคาวัสดุขึ้นระหว่างรออนุมัติหรือไม่?"</p>
+
+        <h4>✅ ข้อกฎหมาย: อปท. ใช้งบตัวเองปรับปรุงบ้านประชาชนได้หรือไม่?</h4>
+        <p><strong>คำตอบ: ไม่จริงทั้งหมด — มีช่องทางกฎหมายให้ทำได้ แต่มีเงื่อนไข</strong></p>
+        <p>พบ<strong>ระเบียบกระทรวงมหาดไทยว่าด้วยค่าใช้จ่ายเพื่อช่วยเหลือประชาชนตามอำนาจหน้าที่ของ อปท. พ.ศ. 2560</strong> (แก้ไขล่าสุด พ.ศ. 2566): อปท. สามารถใช้งบตัวเอง ("งบดำเนินงาน ค่าใช้สอย") ช่วยเหลือประชาชนด้าน "การส่งเสริมและพัฒนาคุณภาพชีวิต" ได้ ครอบคลุมกลุ่มเปราะบาง — แต่ต้องผ่านขั้นตอน: จัดทำโครงการ + ตั้งงบประมาณรายจ่ายในหมวดที่กำหนด + ประกาศให้ประชาชนลงทะเบียน + เสนอคณะกรรมการให้ความเห็นชอบก่อน</p>
+        <p><strong>นัยสำคัญ:</strong> สิ่งที่ทีมงานเข้าใจว่า "อปท. ใช้เงินตัวเองไม่ได้" ไม่ถูกต้องทั้งหมด — อปท. มีอำนาจตามกฎหมายให้ใช้งบตัวเองได้ เพียงแต่ต้องผ่านกระบวนการโครงการ+คณะกรรมการ</p>
+        <div class="note note-ok">✅ <strong>แก้ไขข้อสรุปเดิม:</strong> เดิมเข้าใจว่าเส้นทางนี้ "ไม่เร็วกว่าทาง พมจ. มากนัก" — ไม่ถูกต้อง เพราะ "คณะกรรมการ" ในระเบียบนี้คือ <strong>"คณะกรรมการช่วยเหลือประชาชนของ อปท." ซึ่งเป็นคณะกรรมการภายในของ อปท. เอง</strong> ไม่ใช่ระดับจังหวัดหรือส่วนกลาง พบตัวอย่างจริงจากเทศบาลตำบลหนองไผ่: คณะกรรมการชุดนี้มีนายกเทศมนตรีเป็นประธานเอง ร่วมกับเจ้าหน้าที่ท้องถิ่น — นายกตั้งเอง เป็นประธานเอง อนุมัติเองภายในหน่วยงาน ไม่ต้องส่งเรื่องออกนอกเทศบาลเลย</div>
+        <table class="dtable">
+          <tr><th>เส้นทาง</th><th>คณะกรรมการอยู่ที่ไหน</th><th>ความเร็ว</th></tr>
+          <tr><td>งบ พมจ.</td><td>ระดับจังหวัด (พมจ.เป็นเจ้าภาพ) — ต้องส่งเรื่องออกนอก อปท. รอคิวประชุมจังหวัด</td><td>ช้ากว่า</td></tr>
+          <tr><td>งบ อปท. เอง (ระเบียบ มท. 2560/2566)</td><td>ภายในเทศบาลเอง นายกเป็นประธาน</td><td><strong>น่าจะเร็วกว่ามาก</strong></td></tr>
+        </table>
+        <p><strong>คำถามใหม่ที่ตามมา:</strong> ถ้าทางนี้เร็วกว่าจริง ทำไมเทศบาลไม่นิยมใช้เป็นหลัก? สมมติฐาน: เงินสะสมของเทศบาลเองมีจำกัด (ต่างจากงบ พมจ. ที่มาจากส่วนกลาง ไม่กระทบงบเทศบาล) จึงเลือกพึ่ง พมจ. เพื่อไม่ให้กระทบงบตัวเอง แม้จะช้ากว่า — ยังเป็นสมมติฐาน ต้องเช็คกับพื้นที่จริง (คำถามเพิ่มสำหรับ สท.อ๊อด: "เคยลองใช้งบเทศบาลเองผ่านคณะกรรมการช่วยเหลือประชาชนของเทศบาลไหม เร็วกว่าทาง พมจ. จริงหรือเปล่า และทำไมถึงเลือก/ไม่เลือกทางนี้")</p>
+
+        <h4>แหล่งงบประมาณเพิ่มเติมที่พบจากการสืบค้น</h4>
+        <table class="dtable">
+          <tr><th>แหล่งงบ</th><th>หน่วยงาน</th><th>จุดเด่น/ข้อจำกัด</th></tr>
+          <tr><td><strong>กองทุนฟื้นฟูสมรรถภาพที่จำเป็นต่อสุขภาพระดับจังหวัด</strong></td><td>อบจ. (สปสช.สมทบ 8 บาท/หัวประชากร)</td><td>✅ ใช้ปรับสภาพบ้านได้จริงตามกฎหมาย — ตัวอย่าง อบจ.ระนอง ใช้ 3.9 ล้านบาท/ปี ปรับบ้าน+ยืมอุปกรณ์ฟื้นฟู มี อบจ. 71 จังหวัด (92%) ตั้งกองทุนนี้แล้ว <strong>[ยังไม่เคยถูกใช้ในโครงการนี้ — น่าสนใจที่สุด]</strong></td></tr>
+          <tr><td>กองทุนหลักประกันสุขภาพท้องถิ่น (กปท.)</td><td>อบต./เทศบาล (สปสช.สมทบ)</td><td>⚠️ ห้ามใช้กับสิ่งก่อสร้าง/ครุภัณฑ์ที่ไม่เกี่ยวข้องโดยตรง — ใช้ได้จำกัดกว่ากองทุนฟื้นฟูฯ</td></tr>
+          <tr><td>กองทุนส่งเสริมและพัฒนาคุณภาพชีวิตคนพิการ</td><td>กรม พก. (พม.)</td><td>เน้นกู้ยืมประกอบอาชีพเป็นหลัก ⚠️ ยืนยันจาก รมว.พม. เอง (30 พ.ค. 2567) ว่าช้ากว่าทางตรง เพราะต้องรอคณะกรรมการกองทุนที่ประชุมเพียงเดือนละ 1-2 ครั้ง</td></tr>
+          <tr><td>มูลนิธิที่อยู่อาศัย + การเคหะแห่งชาติ</td><td>ภาคประชาสังคม+รัฐวิสาหกิจ</td><td>โครงการ "แต่งบ้านเติมฝัน" เจาะกลุ่มผู้สูงอายุ/คนพิการโดยตรง; เคยร่วมมือ SC Johnson สร้างบ้านให้กลุ่มเปราะบางต่างจังหวัด</td></tr>
+          <tr><td>การเคหะแห่งชาติ — "บ้านสบายเพื่อยายตา"</td><td>การเคหะแห่งชาติ</td><td>ทำต่อเนื่องปี 2553-2569 ปรับปรุง/สร้างใหม่แล้ว 573 หลังทั่วประเทศ (ปี 2569 ทำ 32 หลัง ใน 10 จังหวัด) — ยังไม่มีนครปฐม/ปทุมธานี/สมุทรปราการในรายชื่อปีนี้ แต่ควรรู้จักไว้เป็นช่องทางระยะยาว</td></tr>
+          <tr><td>งบ อปท. เอง</td><td>อปท.</td><td>ตามระเบียบ มท. 2560/2566 — ทำได้ตามกฎหมาย แต่กระบวนการยุ่งยากพอกัน</td></tr>
+          <tr><td>กองสลาก</td><td>สำนักงานสลากกินแบ่งรัฐบาล</td><td>⚠️ สืบค้นแล้วไม่พบหลักฐานงบเฉพาะสำหรับปรับปรุงบ้าน — งบหลักเน้นโควตาขายสลากเป็นอาชีพให้คนพิการ ไม่ใช่ปรับบ้าน ต้องโทรสอบถามตรง (0-2528-9999) ถ้าต้องการยืนยัน</td></tr>
+          <tr><td>ธนาคารออมสิน</td><td>ธ.ออมสิน</td><td>⚠️ ไม่ใช่แหล่งที่เหมาะ — มีแต่ "สินเชื่อที่อยู่อาศัยผู้สูงอายุ (Reverse Mortgage)" สำหรับคนที่มีบ้านเป็นของตัวเองอยู่แล้ว คนละโจทย์กับกลุ่มเป้าหมายที่ยากจนไม่มีเงินซ่อมบ้าน</td></tr>
+        </table>
+        <p><strong>ข้อเสนอแนะ:</strong> กองทุนฟื้นฟูฯ ของ อบจ. น่าจะเป็นช่องทางที่คุ้มค่าที่สุดที่จะลองติดต่อ — ควรเช็คว่า อบจ.นครปฐม/ปทุมธานี/สมุทรปราการ ตั้งกองทุนนี้แล้วหรือยัง และเคยมีการใช้เพื่อปรับสภาพบ้านในพื้นที่ ไร่ขิง/หลักหก/บางปู มาก่อนหรือไม่</p>
+
+        <h4>รายละเอียดขั้นตอนระเบียบ มท. 2560/2566 — ทำไมถึง "ยุ่งยาก"</h4>
+        <p><strong>เส้นทางฉุกเฉิน (ภัยพิบัติ):</strong> จ่ายจากงบสำรองได้ทันที ไม่ต้องทำโครงการ ไม่ต้องรอกรรมการ</p>
+        <p><strong>เส้นทางที่ใช้จริงกับบ้านผู้สูงอายุ/เปราะบาง ("การส่งเสริมและพัฒนาคุณภาพชีวิต") — ยุ่งยากกว่า มี 4 ขั้น:</strong></p>
+        <ol>
+          <li>อปท. ต้องจัดทำโครงการอย่างเป็นทางการ ระบุกิจกรรม+งบประมาณ</li>
+          <li>ตั้งงบในหมวด "งบดำเนินงาน ค่าใช้สอย" ของแผนงบประมาณรายจ่ายประจำปี</li>
+          <li>ประกาศให้ประชาชนลงทะเบียนขอรับความช่วยเหลือ (เป็นทางการ ไม่ใช่แค่สำรวจ)</li>
+          <li>เสนอคณะกรรมการให้ความเห็นชอบก่อนถึงจ่ายได้</li>
+        </ol>
+        <div class="note note-warn">หลักฐานที่ยืนยันว่าขั้นตอน 4 (รอคณะกรรมการ) คือคอขวดจริง: คำให้สัมภาษณ์ของ รมว.พม. (วราวุธ ศิลปอาชา, 30 พ.ค. 2567) ระบุตรงๆ ว่า กองทุนส่งเสริมและพัฒนาคุณภาพชีวิตคนพิการ "จะใช้เวลาดำเนินการมากกว่า เพราะต้องทำโครงการมาที่กองทุนฯ เพื่อเข้าที่ประชุมพิจารณาอนุมัติ... การประชุมกองทุนฯ มีเพียงเดือนละ 1-2 ครั้ง อาจจะทำให้ล่าช้า" — เป็นหลักฐานตรงจุดที่สุดที่พบ แม้เป็นคนละกองทุนกับที่คุยกันก่อนหน้า แต่โครงสร้าง "ต้องรอกรรมการประชุมตามรอบ" ใช้ร่วมกันแทบทุกกองทุนที่อนุมัติแบบโครงการ (<a href="https://www.m-society.go.th/news_view.php?nid=39342" target="_blank" rel="noopener">m-society.go.th</a>)</div>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 5 ═══════════ -->
+  <section id="phase5" class="phase-section warn">
+    <div class="phase-head">
+      <div class="phase-title">Phase 5 — ดำเนินการปรับปรุง<small>Execution</small></div>
+      <div class="status-pill warn">🟡 ทำได้ แต่ช้าและเหนื่อยเจ้าหน้าที่</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">ช่างลงมือทำจริง ตรงตามแบบไหม? มีการปรับหน้างานอย่างไร?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">ช่าง (ชุมชน/มืออาชีพ), สถาปนิกอาสา (ให้คำปรึกษาระยะไกล), เทศบาล+ทีมงาน (ตรวจรับ), เจ้าของบ้าน/ครอบครัว</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>ความล่าช้าจากการแก้แบบหลายรอบ; ภาระงานเจ้าหน้าที่เทศบาลล้นมือทำให้ติดตามหน้างานไม่ทัน; ค่าแรงส่วนใหญ่ไม่พอ (ยืนยันจากทีมงาน)</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>ถ้าช่างตัดสินใจเองหน้างานแล้วเกิดปัญหาเชิงโครงสร้างภายหลัง ใครรับผิดชอบ? ถ้าไม่มีมาตรฐานตรวจรับที่เป็นทางการ จะรู้ได้อย่างไรว่างานตรงตาม Universal Design จริง (ไม่ใช่แค่ "ดูดีด้วยตา")?</div>
+    </div>
+
+    <details>
+      <summary>ดูรายละเอียดเชิงลึก / กรณีศึกษา</summary>
+      <div class="prose">
+
+        <h4>⚠️ ทางเลือกช่าง — Trade-off ที่ไม่มีทางออกสมบูรณ์</h4>
+        <table class="dtable">
+          <tr><th>ตัวเลือก</th><th>จุดเด่น</th><th>ข้อจำกัด</th></tr>
+          <tr><td>ช่างชุมชน (สืบทอดจากธรรมเนียม พอช.)</td><td>ค่าแรงถูกกว่า เหลืองบไปเป็นค่าวัสดุมากกว่า</td><td>อาจมีปัญหาเรื่องฝีมือ</td></tr>
+          <tr><td>ช่างมืออาชีพ</td><td>ฝีมือดีกว่า</td><td>ค่าแรงสูง กินงบจนเหลือค่าวัสดุน้อย — ส่วนใหญ่ที่ใช้ได้จริงคือช่างที่เต็มใจช่วยเหลือโดยคิดราคาไม่แพง (บางครั้งแทบไม่มีกำไรหรือขาดทุนเล็กน้อย) พึ่งพาน้ำใจอีกชั้นหนึ่ง เหมือนสถาปนิก/นักกายภาพอาสา</td></tr>
+        </table>
+        <p><strong>กลไกที่ช่วยได้จริง:</strong> ช่างส่วนใหญ่ไม่เข้าใจ Universal Design แต่แบบก่อสร้างที่ชัดเจนจากสถาปนิกช่วยแก้ปัญหานี้ได้ — เป็นการถ่ายทอดความรู้เป็นทอดๆ: นักกายภาพบำบัด (รู้ความจำเป็นทางร่างกาย) → สถาปนิก (แปลงเป็นแบบ) → ช่าง (ทำตามแบบได้ถูกต้องแม้ไม่เข้าใจหลักการ Universal Design เอง)</p>
+
+        <h4>⚠️ การกำกับหน้างาน — จุดที่ "ยังไม่ลงตัว"</h4>
+        <p>สถาปนิกอาสาไม่ได้กำกับหน้างานอย่างเป็นทางการ — อาจลงพื้นที่คุยกับช่างระหว่างงานเพื่อให้เข้าใจแบบตรงกัน แล้วประสานงานต่อทางออนไลน์ ปัญหาที่ยังไม่มีทางแก้ชัดเจน: เวลาเจอปัญหาหน้างาน บางครั้งปล่อยให้ช่างตัดสินใจเอง ซึ่งทีมงานเองก็ยอมรับว่า "ไม่ค่อยดีนัก" — สาเหตุคือสถาปนิกอาสาน่าจะไม่มีเวลามากพอจะลงพื้นที่บ่อยขนาดนั้น (ข้อจำกัดโดยธรรมชาติของโมเดลอาสาสมัคร)</p>
+        <p class="italic-note">นี่คือความเสี่ยงที่เชื่อมกับประเด็น "ความรับผิดชอบทางวิชาชีพ" ที่เคยแมปไว้ใน MOU (Phase 3) — ถ้าช่างตัดสินใจเองหน้างานแล้วเกิดปัญหาเชิงโครงสร้างภายหลัง ใครรับผิดชอบ ยังเป็นคำถามเปิด</p>
+
+        <h4>✅ ความสัมพันธ์กับเจ้าของบ้านระหว่างก่อสร้าง — ดีกว่าที่กังวลไว้</h4>
+        <p>ต่างจากความกังวลของเจ้าหน้าที่ใน Phase 0 พบว่าเมื่องานเริ่มทำจริงแล้ว ปัญหาน้อยกว่าที่คาด: เจ้าของบ้านไม่ค่อยมีปัญหา ถ้าช่างมีนิสัยดี เรื่องแบบอาจมีปัญหาบ้าง (เช่น ไม่ตรงใจ) แต่เนื่องจากเป็นงบเทศบาล เจ้าของบ้านมักเข้าใจข้อจำกัดได้เอง — ไม่ต้องอธิบายมากเหมือนที่กังวลไว้</p>
+        <p><strong>นัยสำคัญ:</strong> ความเสี่ยงเรื่อง "การจัดการความคาดหวัง" ที่แมปไว้ใน Phase 0 น่าจะรุนแรงที่สุด<strong>ก่อน</strong>เริ่มงาน (ตอนไปสำรวจแล้วไม่ได้งบ) มากกว่า<strong>ระหว่าง</strong>ทำงานจริง — ควรโฟกัสการจัดการความคาดหวังไปที่ช่วงก่อนอนุมัติงบมากกว่าช่วงก่อสร้าง</p>
+
+        <h4>งบและเวลา — ยังไม่เจอปัญหา แต่มีเงื่อนไขแฝง</h4>
+        <p>เท่าที่ทำมายังไม่เจอปัญหางบ/เวลาเกินแผน เพราะแบบที่ชัดเจนทำให้ช่างทำงานง่ายและเร็ว — แต่มีเงื่อนไขแฝงที่สำคัญ: นี่ใช้ได้ก็ต่อเมื่อ<strong>ช่างอ่านแบบเทคนิคเป็น</strong> ถ้าช่างอ่านแบบไม่ได้ก็อาจเกิดปัญหาได้เช่นกัน — "ช่างที่อ่านแบบก่อสร้างเป็น" จึงเป็นทักษะที่จำเป็นแฝงอยู่ที่ยังไม่เคยถูกระบุเป็นเกณฑ์คัดเลือกช่างมาก่อน</p>
+
+        <h4>การตรวจรับ — ไม่เป็นทางการ เน้นป้องกันล่วงหน้ามากกว่าตรวจสอบย้อนหลัง</h4>
+        <p>เทศบาลร่วมกับทีมงานตรวจรับ — ส่วนใหญ่มีลักษณะอะลุ่มอะหล่วยกัน ไม่ใช่การตรวจสอบมาตรฐานที่เข้มงวด กลยุทธ์หลักที่ใช้จริงคือป้องกันตั้งแต่ต้นทาง: พยายามหาช่างที่ดีและมีประสบการณ์ก่อนเริ่มงาน มากกว่าพึ่งการตรวจสอบคุณภาพหลังส่งมอบ</p>
+        <p><strong>คำถามที่ควรติดตามต่อ:</strong> ถ้าไม่มีมาตรฐานตรวจรับที่เป็นทางการ จะรู้ได้อย่างไรว่างานที่ทำเสร็จตรงตาม Universal Design จริง? นี่อาจเป็นช่องว่างที่ควรมี checklist ง่ายๆ ให้เทศบาล/ทีมงานใช้ตรวจรับ</p>
+
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════ PHASE 6 ═══════════ -->
+  <section id="phase6" class="phase-section risk">
+    <div class="phase-head">
+      <div class="phase-title">Phase 6 — ติดตามผลและส่งต่อความรับผิดชอบ<small>Sustainability Handover</small></div>
+      <div class="status-pill risk">🔴 ยังเป็นความท้าทายเปิดอยู่</div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item"><div class="lbl">คำถามหลักของ Phase</div><div class="val">ใครดูแลต่อหลังโครงการจบ? Key Connector role ส่งต่อให้ใคร?</div></div>
+      <div class="meta-item"><div class="lbl">ผู้เกี่ยวข้องหลัก</div><div class="val">เทศบาล (ระดับบริหาร + ระดับปฏิบัติการ), รพ.สต., อสม.</div></div>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-box pain-known"><span class="lbl">Pain point ที่รู้แล้ว</span>Key Connector ยังอยู่ที่อาศรมศิลป์ (ภายนอก) — ยังไม่ transfer เข้าเป็นระบบปกติของเทศบาล (ตรงกับหลักการ "sustainability over dependency" ที่ทีมยึดอยู่แล้ว)</div>
+      <div class="pain-box pain-unknown"><span class="lbl">Pain point ที่อาจยังไม่รู้</span>หลังบ้านถูกปรับปรุงแล้ว มีกลไกติดตามสภาพบ้าน/ผู้อยู่อาศัยระยะยาวหรือไม่ หรือจบแค่ "ส่งมอบบ้านเสร็จ"?</div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SUMMARY ═══════════ -->
+  <div class="summary-section">
+    <h2>สรุปจุดที่ควรเจาะลึกเป็นพิเศษ (สำหรับ Guided Interview รายพื้นที่)</h2>
+    <ol class="summary-list">
+      <li><strong>Phase 0 (Buy-in):</strong> ✅ ยืนยันแล้วว่า Phase 0 ↔ Phase 1 เชื่อมกันจริง (กรณีบางศรีเมือง: ไม่สำรวจเชิงรุก → ไม่เห็นข้อมูล → สรุปว่าไม่มีความต้องการ → ปฏิเสธเข้าร่วม) — ไม่ใช่แค่สมมติฐานอีกต่อไป</li>
+      <li><strong>Phase 4 (Supply/งบ):</strong> จุดเปราะที่สุด — แต่ยืนยันแล้วว่างบรัฐมีสนับสนุนอยู่ ความลังเลของเทศบาลน่าจะมาจาก "ไม่เคยทำ+จินตนาการว่ายาก" หรือ "เคยทำแล้วรู้ว่ายาก" มากกว่าไม่รู้จะหางบจากไหน</li>
+      <li><strong>Phase 6 (Sustainability):</strong> ยังไม่มีต้นแบบที่ชัดเจนแม้แต่ในไร่ขิง — และตอนนี้เห็นความเสี่ยง Key Connector transfer เกิดขึ้นจริงแล้วที่หลักหก (คุณแตนลาออก)</li>
+      <li><strong>ใหม่ — การจัดการความคาดหวังของเจ้าของบ้าน:</strong> เป็น pain point ที่ตัดขวางหลาย Phase (เริ่มกังวลตั้งแต่ Phase 0 แต่ผลกระทบจริงอยู่ที่ Phase 2/5) — ควรมีแนวทางสื่อสารมาตรฐานให้เจ้าหน้าที่ใช้พูดกับเจ้าของบ้าน ("พยายามช่วย แต่รับประกันไม่ได้")</li>
+      <li><strong>ปิดประเด็นแล้ว:</strong> ความเป็นธรรมในการคัดเลือกบ้าน<strong>ไม่ใช่</strong>ปัจจัยที่ทำให้เทศบาลลังเลใน Phase 0 — เป็นคนละเรื่องกับ pain point ระบบคัดกรองที่คุยไว้ใน Phase 1 (ซึ่งยังคงเป็นปัญหาอยู่ แต่ไม่ใช่สาเหตุของการปฏิเสธเข้าร่วมโครงการ)</li>
+    </ol>
+  </div>
+
+  <div class="summary-section">
+    <h2>ขั้นต่อไป (แนะนำ)</h2>
+    <ul class="todo-list">
+      <li>คุยรายละเอียดกับ<strong>คุณโป้ง</strong> (พยาบาลคนใหม่ที่หลักหก) เพื่อประเมินว่าจะรับช่วง Key Connector role ได้จริงหรือไม่</li>
+      <li>นำ Journey Map นี้ไปเทียบกับพื้นที่<strong>บางปู</strong> (ใหม่สุด, เทศบาลยังลังเล) → เช็คว่าเข้าข่าย "ไม่เคยทำ" หรือ "เคยทำแล้วรู้ว่ายาก" แบบไหน</li>
+      <li>สัมภาษณ์ สท.อ๊อด (ไร่ขิง) เจาะรายละเอียดช่วง 2 ปีก่อนหน้าที่เริ่มสนใจ — อยากรู้ว่า "เห็นผลงานจากสถาปนิก" ครั้งแรกเกิดขึ้นอย่างไร เพื่อจำลองจุดเปลี่ยนนี้ให้บางปู/หลักหกได้</li>
+      <li>ร่างแนวทางสื่อสารมาตรฐาน "พยายามช่วย แต่รับประกันไม่ได้" ให้เจ้าหน้าที่ใช้พูดกับเจ้าของบ้านระหว่างลงพื้นที่ประเมิน</li>
+      <li>เจาะ Phase 4 โดยเฉพาะเรื่องแหล่งงบประมาณที่เทศบาลแต่ละแห่งเข้าถึงได้จริง</li>
+    </ul>
+  </div>
+
+  <div class="footer">โครงการ R69-00219 · สถาบันอาศรมศิลป์ · สสส. · แม่แบบใช้ร่วมกัน 3 พื้นที่ (ไร่ขิง / หลักหก / บางปู)</div>
+
+</div>
+</body>
+</html>
