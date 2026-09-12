@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทน.บางบัวทอง — Dashboard พื้นที่ปฏิบัติการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bbt: #7A5C99;
+  --bbt-light: #F1ECF7;
+  --bbt-mid: #B79BD6;
+  --bbt-dark: #4E3A64;
+  --warn: #B85000;
+  --warn-light: #FFF3EA;
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --border: #E0DDD6;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9890;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 8px; }
+.nav-logo { font-size: 15px; font-weight: 600; color: var(--text); }
+.nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+.nav-link { font-size: 13px; padding: 6px 14px; border-radius: 6px; text-decoration: none; color: var(--text-2); transition: background 0.15s; }
+.nav-link:hover { background: var(--bg); }
+.nav-link.active { background: var(--bg); color: var(--text); font-weight: 500; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+.site-hero { background: var(--bbt); border-radius: var(--radius); padding: 2rem 2.5rem; margin-bottom: 2rem; color: white; position: relative; overflow: hidden; }
+.site-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.hero-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #FFD700; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.hero-name { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+.hero-province { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+.hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.hero-stat-num { font-size: 28px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.65); max-width:150px; }
+
+.sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; margin-bottom: 14px; }
+
+.new-site-note { background: var(--white); border: 1px dashed var(--border); border-radius: var(--radius); padding: 1.1rem 1.4rem; font-size: 13.5px; color: var(--text-2); line-height: 1.7; margin-bottom: 2rem; }
+.new-site-note strong { color: var(--text); }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.stat-num { font-size: 24px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: var(--bbt); }
+.stat-num.na { color: var(--text-3); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.phase-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+.phase-steps { display: flex; gap: 0; margin-top: 12px; }
+.phase-step { flex: 1; padding: 10px 8px; text-align: center; font-size: 12px; border: 1px solid var(--border); border-right: none; }
+.phase-step:first-child { border-radius: 8px 0 0 8px; }
+.phase-step:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+.phase-step.done { background: var(--bbt-light); border-color: var(--bbt-mid); color: var(--bbt); font-weight: 500; }
+.phase-step.current { background: var(--bbt-light); border-color: var(--bbt); color: var(--bbt); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--bbt); }
+.phase-step .step-num { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; display: block; margin-bottom: 3px; }
+.phase-note { font-size: 12px; color: var(--text-3); margin-top: 8px; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 2rem; }
+.sh-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; }
+.sh-card.key { border-color: var(--bbt-mid); }
+.sh-card.gap { border-color: #F0C040; background: #FFFBEF; }
+.sh-role { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); text-transform: uppercase; margin-bottom: 4px; }
+.sh-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.sh-desc { font-size: 13px; color: var(--text-2); margin-top: 4px; line-height: 1.5; }
+.sh-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+.sh-tag.confirmed { background: var(--bbt-light); color: var(--bbt); }
+.sh-tag.interest { background: var(--bbt-light); color: var(--bbt); }
+.sh-tag.pending { background: #FFF8E6; color: #7A5800; }
+.sh-tag.missing { background: var(--warn-light); color: var(--warn); }
+
+/* Constraints */
+.constraint-block { border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.cb-warn { background: var(--warn-light); border: 1px solid #F0B070; }
+.cb-info { background: var(--bbt-light); border: 1px solid var(--bbt-mid); }
+.constraint-block h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.cb-warn h3 { color: var(--warn); }
+.cb-info h3 { color: var(--bbt); }
+.constraint-list { list-style: none; }
+.constraint-list li { font-size: 13px; padding: 3px 0; }
+.cb-warn .constraint-list li { color: var(--warn); }
+.cb-warn .constraint-list li::before { content: '⚠ '; font-size: 11px; }
+.cb-info .constraint-list li { color: var(--bbt-dark); }
+.cb-info .constraint-list li::before { content: '✓ '; font-size: 11px; }
+
+.plan-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.pt-head { display: grid; grid-template-columns: 60px 1fr 160px 130px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.pt-row { display: grid; grid-template-columns: 60px 1fr 160px 130px; border-bottom: 1px solid var(--border); }
+.pt-row:last-child { border-bottom: none; }
+.pt-row:hover { background: var(--bg); }
+.pt-head > div, .pt-row > div { padding: 9px 12px; font-size: 13px; }
+.pt-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge.done { background: var(--bbt-light); color: var(--bbt); }
+.badge.wip { background: #FFF8E6; color: #7A5800; }
+.badge.todo { background: var(--bg); color: var(--text-3); border: 1px solid var(--border); }
+
+/* Diff vs Raiking */
+.diff-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+.diff-head { display: grid; grid-template-columns: 26% 1fr 1fr; background: var(--bg); border-bottom: 1px solid var(--border); }
+.diff-row { display: grid; grid-template-columns: 26% 1fr 1fr; border-bottom: 1px solid var(--border); }
+.diff-row:last-child { border-bottom: none; }
+.diff-head > div, .diff-row > div { padding: 9px 12px; font-size: 13px; }
+.diff-head > div { font-size: 11px; font-weight: 600; color: var(--text-3); }
+.diff-head .h-rai { color: #1A7A56; }
+.diff-head .h-bbt { color: var(--bbt); }
+.diff-row .dim { font-weight: 500; font-size: 12px; color: var(--text-2); background: var(--bg); }
+.diff-row .rai-c { border-left: 2px solid #E6F5EE; color: var(--text-2); }
+.diff-row .bbt-c { border-left: 2px solid var(--bbt-light); }
+.diff-row .bbt-c.gap { color: var(--warn); }
+.diff-row .bbt-c.ok { color: var(--bbt-dark); font-weight: 500; }
+
+.footer { border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.footer p { font-size: 12px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">หลักสูตรขบวนการชุมชน</div>
+  <div class="nav-links">
+    <a href="dashboard_main.html" class="nav-link">ภาพรวม</a>
+    <a href="dashboard_raiking69.html" class="nav-link">ทม.ไร่ขิง</a>
+    <a href="dashboard_laksi.html" class="nav-link">ทต.หลักหก</a>
+    <a href="dashboard_bangpu.html" class="nav-link">ทต.บางปู</a>
+    <a href="dashboard_bangbuathong.html" class="nav-link active">ทน.บางบัวทอง</a>
+    <a href="journey_map.html" class="nav-link">Journey Map</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="site-hero">
+    <div class="hero-badge"><span class="status-dot"></span> พื้นที่ที่ 4 — เพิ่งเริ่มต้น ปีแรก</div>
+    <div class="hero-name">เทศบาลนครบางบัวทอง</div>
+    <div class="hero-province">จ.นนทบุรี — ปี 2569 (พื้นที่ใหม่ล่าสุด)</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">1</div><div class="hero-stat-label">ปีที่เริ่มทดลองโมเดลนี้</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">100K</div><div class="hero-stat-label">บาท/ปี งบที่มีอยู่แล้ว</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">0</div><div class="hero-stat-label">ภาคีสถาปัตย์ที่ยืนยันแล้ว</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">1</div><div class="hero-stat-label">โมเดลใหม่ที่ทั้งโครงการจับตา</div></div>
+    </div>
+  </div>
+
+  <div class="new-site-note">
+    📍 <strong>พื้นที่ใหม่ล่าสุดของโครงการ (พื้นที่ที่ 4)</strong> — บางบัวทองเดิมถูกใช้เป็นกรณีศึกษาเปรียบเทียบใน Pain Point Journey Map เพราะมี<strong>ความสัมพันธ์เดิมกับอาศรมศิลป์อยู่แล้ว</strong> และกำลังทดลอง<strong>โมเดลงบประมาณที่ต่างจากไร่ขิง/หลักหกอย่างสิ้นเชิง</strong> (ใช้งบเทศบาลเองแทนพึ่ง สสส./พมจ.) ข้อมูลในหน้านี้ส่วนใหญ่มาจาก Pain Point Journey Map — ยังไม่ผ่านการยืนยันภาคสนามอย่างเป็นทางการเท่าไร่ขิง/หลักหก ควรอัปเดตหลังลงพื้นที่จริง
+  </div>
+
+  <div class="sec-label">ตัวชี้วัดหลัก — ปี 2569</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num na">1–2/6</div><div class="stat-label">ระยะที่เริ่มแล้ว (ประมาณการ)</div></div>
+    <div class="stat-card"><div class="stat-num na">?</div><div class="stat-label">รายที่ผู้นำชุมชนเสนอ (ยังไม่นับ)</div></div>
+    <div class="stat-card"><div class="stat-num na">เอกชน</div><div class="stat-label">นักกายภาพบำบัด (จ้างผ่านงบ อปท.)</div></div>
+    <div class="stat-card"><div class="stat-num na">?</div><div class="stat-label">จำนวนบ้านเป้าหมาย (ยังไม่กำหนด)</div></div>
+  </div>
+
+  <div class="sec-label">ระยะกระบวนการ</div>
+  <div class="phase-card">
+    <p style="font-size:13px;color:var(--bbt);">● อยู่ระหว่างระยะ 1–2 — ผู้นำชุมชนเสนอกลุ่มเป้าหมายแล้ว กำลังประสานจ้างนักกายภาพบำบัดเอกชน</p>
+    <div class="phase-steps">
+      <div class="phase-step done"><span class="step-num">1</span>สำรวจเบื้องต้น</div>
+      <div class="phase-step current"><span class="step-num">2</span>ประสานภาคี</div>
+      <div class="phase-step"><span class="step-num">3</span>สำรวจละเอียด</div>
+      <div class="phase-step"><span class="step-num">4</span>ออกแบบ</div>
+      <div class="phase-step"><span class="step-num">5</span>ปรับปรุงบ้าน</div>
+      <div class="phase-step"><span class="step-num">6</span>ติดตามผล</div>
+    </div>
+    <div class="phase-note">⏳ กำลังรอ: ผลการทดลองจ้างนักกายภาพบำบัดเอกชนปีแรก / ยังไม่มีภาคีสถาปัตย์สำหรับระยะออกแบบ</div>
+  </div>
+
+  <div class="sec-label">ภาคีหลักและสถานะ</div>
+  <div class="grid2">
+    <div class="sh-card key">
+      <div class="sh-role">อปท.</div>
+      <div class="sh-name">เทศบาลนครบางบัวทอง</div>
+      <div class="sh-desc">ผอ.กอง / ปลัด / นายก เคยทำงานร่วมกับอาศรมศิลป์มาก่อนแล้ว — ไม่ต้องไต่ระดับความสัมพันธ์ใหม่ตั้งแต่ต้น (ต่างจากพื้นที่อื่นที่เริ่มจากศูนย์)</div>
+      <span class="sh-tag confirmed">ความสัมพันธ์เดิม — Buy-in แล้ว</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">แหล่งงบประมาณ</div>
+      <div class="sh-name">งบ "พัฒนาศักยภาพผู้พิการ" (~100,000 บาท/ปี)</div>
+      <div class="sh-desc">งบประจำปีที่เทศบาลมีอยู่แล้วทุกปี ปีนี้เป็นปีแรกที่เจ้าหน้าที่เสนอปรับรายละเอียดการใช้ — เปลี่ยนจากกิจกรรมอื่นมาเป็นจ้างนักกายภาพบำบัด</div>
+      <span class="sh-tag confirmed">งบมีอยู่แล้ว — ไม่ต้องขอใหม่</span>
+    </div>
+    <div class="sh-card key">
+      <div class="sh-role">ภาคีสุขภาพ</div>
+      <div class="sh-name">นักกายภาพบำบัดเอกชน (จ้างผ่านงบ อปท.)</div>
+      <div class="sh-desc">โมเดลต่างจากไร่ขิง/หลักหกที่ใช้นักศึกษาฝึกงานจากมหาวิทยาลัย — ยังไม่เคยมีที่ไหนทำแบบนี้มาก่อน ต้องรอดูผลปีแรก</div>
+      <span class="sh-tag pending">กำลังทดลอง — ปีแรก</span>
+    </div>
+    <div class="sh-card">
+      <div class="sh-role">แกนนำชุมชน</div>
+      <div class="sh-name">ผู้นำชุมชนบางบัวทอง</div>
+      <div class="sh-desc">เป็นผู้เสนอรายชื่อกลุ่มเปราะบางเป้าหมายให้เจ้าหน้าที่ — บทบาทเชิงรุกกว่าที่คาดในพื้นที่ใหม่ทั่วไป</div>
+      <span class="sh-tag confirmed">เสนอกลุ่มเป้าหมายแล้ว</span>
+    </div>
+    <div class="sh-card gap">
+      <div class="sh-role" style="color:#B85000;">ช่องว่างสำคัญ</div>
+      <div class="sh-name" style="color:#B85000;">ภาคีสถาปัตย์ — ยังไม่มี</div>
+      <div class="sh-desc" style="color:#7A5800;">ต้องหาคณะสถาปัตยกรรม/นักออกแบบก่อนถึงระยะออกแบบ (ระยะ 4) — เปรียบได้กับ มทร.รัตนโกสินทร์ในไร่ขิง หรือ ม.ลาดกระบังที่บางปูกำลังเจรจา</div>
+      <span class="sh-tag missing">⚠ ต้องดำเนินการ</span>
+    </div>
+    <div class="sh-card gap">
+      <div class="sh-role" style="color:#B85000;">ช่องว่างสำคัญ</div>
+      <div class="sh-name" style="color:#B85000;">ผู้ประสานงานกลาง (Key Connector) — ยังไม่ชัดเจน</div>
+      <div class="sh-desc" style="color:#7A5800;">แม้ความสัมพันธ์ระดับผู้บริหารจะดีอยู่แล้ว แต่ยังไม่มีใครรับบทบาทเชื่อมชุมชน-เทศบาล-วิชาการแบบต่อเนื่อง เหมือน สท.อ๊อด ในไร่ขิง</div>
+      <span class="sh-tag missing">⚠ ต้องดำเนินการ</span>
+    </div>
+  </div>
+
+  <div class="sec-label">MOU</div>
+  <div class="constraint-block cb-info" style="margin-bottom:2rem;">
+    <h3>✓ ไม่บังคับ — แต่เจ้าหน้าที่เป็นฝ่ายขอเซ็นเอง</h3>
+    <p style="font-size:13px;color:var(--bbt-dark);">MOU ไม่ใช่เงื่อนไขในการเริ่มงาน แต่ในกรณีบางบัวทอง เจ้าหน้าที่เป็นฝ่ายขอเซ็นเอง — ทีมงานยินดีถ้าฝ่ายไหนต้องการ แต่ไม่ได้บังคับหากทำงานได้โดยไม่มี MOU</p>
+  </div>
+
+  <div class="sec-label">แผนงานขั้นตอน (ประมาณการเบื้องต้น)</div>
+  <div class="plan-table">
+    <div class="pt-head">
+      <div>ขั้น</div>
+      <div>กิจกรรม</div>
+      <div>ผู้รับผิดชอบ</div>
+      <div>สถานะ</div>
+    </div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">1</div><div style="padding:9px 12px;font-size:13px;">ผู้นำชุมชนเสนอรายชื่อกลุ่มเปราะบางเป้าหมาย</div><div style="padding:9px 12px;font-size:13px;">ผู้นำชุมชน</div><div style="padding:9px 12px;"><span class="badge done">ดำเนินการแล้ว</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">2</div><div style="padding:9px 12px;font-size:13px;">เสนอปรับรายละเอียดการใช้งบ "พัฒนาศักยภาพผู้พิการ" เป็นจ้างนักกายภาพบำบัด</div><div style="padding:9px 12px;font-size:13px;">เจ้าหน้าที่เทศบาล</div><div style="padding:9px 12px;"><span class="badge wip">กำลังดำเนินการ</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">3</div><div style="padding:9px 12px;font-size:13px;">นักกายภาพบำบัดลงประเมินสภาพร่างกาย/บ้านของกลุ่มเป้าหมาย</div><div style="padding:9px 12px;font-size:13px;">นักกายภาพบำบัดเอกชน</div><div style="padding:9px 12px;"><span class="badge todo">รอกำหนดการ</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">4</div><div style="padding:9px 12px;font-size:13px;">หาภาคีสถาปัตย์/นักออกแบบ สำหรับระยะออกแบบ</div><div style="padding:9px 12px;font-size:13px;">ทีมโครงการ</div><div style="padding:9px 12px;"><span class="badge todo">ยังไม่ได้เริ่ม</span></div></div>
+    <div class="pt-row"><div style="font-family:'IBM Plex Mono',monospace;color:var(--text-3);padding:9px 12px;">5</div><div style="padding:9px 12px;font-size:13px;">ปรับปรุงบ้านจริง — ต้องมีภาคีสถาปัตย์และแบบก่อสร้างแล้ว</div><div style="padding:9px 12px;font-size:13px;">TBD</div><div style="padding:9px 12px;"><span class="badge todo">ยังไม่ได้วางแผน</span></div></div>
+  </div>
+
+  <div class="sec-label">ประเด็นที่ยังต้องหาคำตอบ</div>
+  <div style="margin-bottom:2rem;">
+    <div class="constraint-block cb-warn" style="margin-bottom:12px;">
+      <h3>⚠ ช่องว่างเร่งด่วน — ต้องดำเนินการก่อน</h3>
+      <ul class="constraint-list">
+        <li>หาภาคีสถาปัตย์/นักออกแบบ (ก่อนระยะ 4)</li>
+        <li>หาผู้ประสานงานกลาง (Key Connector) ในพื้นที่ให้ชัดเจน</li>
+        <li>ยืนยันผลการจ้างนักกายภาพบำบัดเอกชนปีแรก — ใช้ได้ผลจริงหรือไม่ ก่อนขยายโมเดลนี้ไปพื้นที่อื่น</li>
+        <li>เช็คว่าเทศบาลอื่นมีงบหมวดคล้ายกัน ("พัฒนาศักยภาพผู้พิการ/ผู้สูงอายุ") ที่ใช้ได้แบบเดียวกันหรือไม่ — ขอบเขตการใช้จ่ายอาจต่างกันในแต่ละ อปท.</li>
+        <li>ยืนยันจำนวนบ้านเป้าหมายและขอบเขตพื้นที่ทำงานปีแรก</li>
+      </ul>
+    </div>
+    <div class="constraint-block cb-info">
+      <h3>✓ สิ่งที่เตรียมไว้แล้ว</h3>
+      <ul class="constraint-list">
+        <li>มีความสัมพันธ์เดิมกับอาศรมศิลป์ (ผอ.กอง/ปลัด/นายกเคยร่วมงานมาก่อน)</li>
+        <li>มีงบประจำปีอยู่แล้ว — ไม่ต้องขอ งบใหม่หรือรองบจากหน่วยงานภายนอก</li>
+        <li>ผู้นำชุมชนเสนอกลุ่มเปราะบางเป้าหมายมาแล้ว</li>
+        <li>ไม่ต้องมี MOU ก็ทำงานได้ (แม้เจ้าหน้าที่เสนอขอเซ็นเอง)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-label">เปรียบเทียบกับ ทม.ไร่ขิง — จุดต่างสำคัญ</div>
+  <div class="diff-table">
+    <div class="diff-head">
+      <div>มิติ</div>
+      <div class="h-rai">ทม.ไร่ขิง (บทเรียน)</div>
+      <div class="h-bbt">ทน.บางบัวทอง (สถานะปัจจุบัน)</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ความสัมพันธ์กับอาศรมศิลป์</div>
+      <div class="rai-c">สร้างใหม่ — ใช้เวลาหลายปีกว่าจะ buy-in</div>
+      <div class="bbt-c ok">✓ มีความสัมพันธ์เดิมอยู่แล้ว — เริ่มได้เร็วกว่ามาก</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">แหล่งงบประมาณ</div>
+      <div class="rai-c">พึ่งโครงการ สสส. เป็นหลัก</div>
+      <div class="bbt-c ok">✓ ใช้งบเทศบาลเองที่มีอยู่แล้ว — อาจยั่งยืนกว่าในระยะยาว</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ภาคีสุขภาพ</div>
+      <div class="rai-c">ม.มหิดล — นักศึกษาฝึกงาน (ทุกเทอมหมุนเวียน)</div>
+      <div class="bbt-c gap">⚠ จ้างเอกชนโดยตรง — โมเดลใหม่ ยังไม่เคยพิสูจน์ผล</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ภาคีสถาปัตย์</div>
+      <div class="rai-c">มทร.รัตนโกสินทร์ ยืนยันแล้วก่อนระยะ 4</div>
+      <div class="bbt-c gap">⚠ ยังไม่มี — ต้องหาก่อนระยะ 4</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">Key Connector</div>
+      <div class="rai-c">สท.อ๊อด — ยืนยันแต่เนิ่นๆ</div>
+      <div class="bbt-c gap">⚠ ยังไม่มีคนรับบทบาทนี้ชัดเจน</div>
+    </div>
+    <div class="diff-row">
+      <div class="dim">ขนาด อปท.</div>
+      <div class="rai-c">เทศบาลเมือง</div>
+      <div class="bbt-c">เทศบาลนคร (ใหญ่กว่า — ทรัพยากร/กำลังคนยังไม่ยืนยัน)</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>ทน.บางบัวทอง · หลักสูตรขบวนการชุมชน · R69-00219</p>
+    <p>อัปเดตล่าสุด: กันยายน 2569 (ข้อมูลเบื้องต้นจาก Pain Point Journey Map — รอยืนยันภาคสนาม)</p>
+  </div>
+
+</div>
+</body>
+</html>
